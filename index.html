@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet/less" type="text/css" href="https://hansonnnn.github.io/theme/stylesheet/style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/solid.css">
+
+    <link href="https://hansonnnn.github.io/static/custom.css" rel="stylesheet">
+
+
+
+    <link rel="shortcut icon" href="/images/fav.ico" type="image/x-icon">
+    <link rel="icon" href="/images/fav.ico" type="image/x-icon">
+
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#333333">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#333333">
+
+    <meta name="author" content="Zhao Han" />
+    <meta name="description" content="" />
+<meta property="og:site_name" content="Hansonnnn"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="Hansonnnn"/>
+<meta property="og:description" content=""/>
+<meta property="og:locale" content="zh_CN"/>
+<meta property="og:url" content="https://hansonnnn.github.io"/>
+<meta property="og:image" content="/images/head.jpg">
+
+  <title>Hansonnnn</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://hansonnnn.github.io">
+        <img src="/images/head.jpg" alt="" title="">
+      </a>
+      <h1><a href="https://hansonnnn.github.io"></a></h1>
+
+<p>test</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://hansonnnn.github.io/pages/about-me.html#about-me">About Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/Hansonnnn" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-mail" href="hanz.yw1024@gmail.com" target="_blank">
+            <i class="fab fa-mail">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="https://hansonnnn.github.io">    Home
+</a>
+
+      <a href="/archives.html">Archives</a>
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+
+
+    </nav>
+
+
+
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-introduction.html#voltdb-introduction">VoltDB 简介</a></h2>
+    <p>
+          Posted on 2016-10-11(星期二) 12:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、VoltDB 简介</h3>
+<p><code>VoltDB</code> 是一种内存数据库，作为常见的内存数据库( K-V 存储)，但也可以只将这种k-v形式存储的内存数据库称为内存缓存（cache），其不是通常sql操作数据库因此也称类似的数据存储为 <code>NoSQL</code>，但作为新型的内存数据库NewSQL，不同于 <code>NoSQL</code> 数据库，它还是立足于常用的关系型数据库数据存储方式，并且支持 sql，支持事务。</p>
+<p>作为新兴的一种内存数据库技术，<code>VoltDB</code> 可以说是完美，尤其是对于数据量大，单笔数据小的使用场景，<code>voltDB</code> 占尽了优势，采用内存存储，是为了提高传统关系型数据库速度的瓶颈，<code>shard-nothing</code> 结构让它可以做到集群部署的高可用，弹性存储。最关键的是其很好的继承了传统数据库的sql以及事务特性，这对于其使用者可以很好的从传统关系型数据库切换到voltDB来。下面将具体介绍 <code>VoltDB</code> 的特性以及使用。</p>
+<h4>1.1 事务</h4>
+<p><code>VoltDB</code> 的事务沿用了传统关系型数据库的特性，并且在传统型数据库事务之上做出了很多优化以及改进。</p>
+<p><code>VoltDB</code> 是如何确保其事务特性？（ACID）</p>
+<ul>
+<li>原子性：对于一次事务的执行，在 <code>VoltDB …</code></li></ul>
+        <br>
+        <a class="btn" href="https://hansonnnn.github.io/articles/voltdb-introduction.html#voltdb-introduction">    Continue reading
+</a>
+  </div>
+</article>
+
+  <div class="pagination">
+  </div>
+
+
+
+
+    <footer>
+<p>&copy;  2019</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Hansonnnn ",
+  "url" : "https://hansonnnn.github.io",
+  "image": "/images/head.jpg",
+  "description": ""
+}
+</script>
+
+</body>
+</html>
