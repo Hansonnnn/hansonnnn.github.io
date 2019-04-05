@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet/less" type="text/css" href="https://hansonnnn.github.io/theme/stylesheet/style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/solid.css">
+
+    <link href="https://hansonnnn.github.io/static/custom.css" rel="stylesheet">
+
+
+
+    <link rel="shortcut icon" href="/images/fav.ico" type="image/x-icon">
+    <link rel="icon" href="/images/fav.ico" type="image/x-icon">
+
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#333333">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#333333">
+
+<meta name="author" content="Zhao Han" />
+<meta name="description" content="一、Import 数据 针对导入数据到 VoltDB 当中，VoltDB 为不同的使用场景提供了不同的解决方案，有可能只需要在第一次初始化数据到数据库中时导入，但也有可能数据实时更新同时就需要数据实时导入到 VoltDB 当中。 1.1 使用工具一次性导入 在一次性导入的场景当中，比如一次性将数据初始化到 VoltDB 当中，VoltDB 提供了批量导入工具 csvloader 以及 jdbcloader。 使用 csvloader 工具导入数据到数据库即从 csv 文件导入数据到 VoltDB 。在启动 VoltDB 后，打开另外的 shell 窗口进入相同的目录，使用以下命令： $csvloader city --file=data.csv 解释一下上面的命令，city 是已经在 VoltDB 中创建的表结构，data.csv 是数据批量存在的文件 …" />
+<meta name="keywords" content="">
+
+<meta property="og:site_name" content="Hansonnnn"/>
+<meta property="og:title" content="（四）VoltDB 数据导入导出"/>
+<meta property="og:description" content="一、Import 数据 针对导入数据到 VoltDB 当中，VoltDB 为不同的使用场景提供了不同的解决方案，有可能只需要在第一次初始化数据到数据库中时导入，但也有可能数据实时更新同时就需要数据实时导入到 VoltDB 当中。 1.1 使用工具一次性导入 在一次性导入的场景当中，比如一次性将数据初始化到 VoltDB 当中，VoltDB 提供了批量导入工具 csvloader 以及 jdbcloader。 使用 csvloader 工具导入数据到数据库即从 csv 文件导入数据到 VoltDB 。在启动 VoltDB 后，打开另外的 shell 窗口进入相同的目录，使用以下命令： $csvloader city --file=data.csv 解释一下上面的命令，city 是已经在 VoltDB 中创建的表结构，data.csv 是数据批量存在的文件 …"/>
+<meta property="og:locale" content="zh_CN"/>
+<meta property="og:url" content="https://hansonnnn.github.io/articles/voltdb-data-usages.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-01-30 18:00:00+08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://hansonnnn.github.io/author/zhao-han.html">
+<meta property="article:section" content="VoltDB"/>
+<meta property="og:image" content="/images/head.jpg">
+
+  <title>Hansonnnn &ndash; （四）VoltDB 数据导入导出</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://hansonnnn.github.io">
+        <img src="/images/head.jpg" alt="" title="">
+      </a>
+      <h1><a href="https://hansonnnn.github.io"></a></h1>
+
+<p>test</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://hansonnnn.github.io/pages/about-me.html#about-me">About Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/Hansonnnn" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-mail" href="hanz.yw1024@gmail.com" target="_blank">
+            <i class="fab fa-mail">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="https://hansonnnn.github.io">    Home
+</a>
+
+      <a href="/archives.html">Archives</a>
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="voltdb-data-usages">（四）VoltDB 数据导入导出</h1>
+    <p>
+          Posted on 2017-01-30(星期一) 18:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h3>一、Import 数据</h3>
+<p>针对导入数据到 <code>VoltDB</code> 当中，<code>VoltDB</code> 为不同的使用场景提供了不同的解决方案，有可能只需要在第一次初始化数据到数据库中时导入，但也有可能数据实时更新同时就需要数据实时导入到 <code>VoltDB</code> 当中。</p>
+<h4>1.1 使用工具一次性导入</h4>
+<p>在一次性导入的场景当中，比如一次性将数据初始化到 <code>VoltDB</code> 当中，<code>VoltDB</code> 提供了批量导入工具 <code>csvloader</code> 以及 <code>jdbcloader</code>。</p>
+<p>使用 <code>csvloader</code> 工具导入数据到数据库即从 <code>csv</code> 文件导入数据到 <code>VoltDB</code> 。在启动 <code>VoltDB</code> 后，打开另外的 shell 窗口进入相同的目录，使用以下命令：</p>
+<div class="highlight"><pre><span></span><span class="nv">$csvloader</span> city --file<span class="o">=</span>data.csv
+</pre></div>
+
+
+<p>解释一下上面的命令，<code>city</code> 是已经在 <code>VoltDB</code> 中创建的表结构，<code>data.csv</code> 是数据批量存在的文件，需要使用 <code>--file</code> 来指定文件。命令格式即如下：</p>
+<div class="highlight"><pre><span></span><span class="nv">$csvloader</span> <span class="o">[</span>table-name<span class="o">]</span> --file<span class="o">=[</span>filename<span class="o">]</span>
+</pre></div>
+
+
+<p>其他命令选项可以在官网查询。</p>
+<p>使用 jdbcloader 导入数据：</p>
+<div class="highlight"><pre><span></span>$ jdbcloader employees <span class="se">\</span>
+     --jdbcurl<span class="o">=</span>jdbc:postgresql://remotesvr/corphr <span class="se">\ </span>
+     --jdbctable<span class="o">=</span>employees <span class="se">\ </span>
+     --jdbcdriver<span class="o">=</span>org.postgresql.Driver
+</pre></div>
+
+
+<p>上述命令即使用 <code>jdbc</code> 工具批量导入数据到 <code>VoltDB</code>。</p>
+<h4>1.2 实时导入数据</h4>
+<p>要导入的数据是不断更新的业务数据，也就是导入的数据源数据实时更新，需要在配置文件中配置<code>import</code>相关配置。在导入时需要使用<code>VoltDB</code>中已有的存储过程，但是不同的一点是，它是可以自动的控制数据导入。比如使用<code>kafkaloader</code>将数据从<code>kafka</code>中导入数据。
+在使用<code>kafkaloader</code>时（<code>type="kafka"</code>），需要选择数据导入之前的初始化类型（<code>format</code>），有<code>CSV</code>和<code>TSV</code>两种类型可供选择，并且需要在填写有关<code>Import</code>的配置项的时候需要指明，然后在创建表时会根据<code>kafka</code>中存储的JSON字符串的<code>K-V</code>对数(就是一段<code>JSON</code>串中存在的键值对的对数)来决定。另外导入时需要指明<code>kafka</code>的<code>groupid</code>,否则可能会出现导入失败。</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;import&gt;</span>
+  <span class="nt">&lt;configuration</span> <span class="na">type=</span><span class="s">&quot;kafka&quot;</span> <span class="na">format=</span><span class="s">&quot;csv&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;brokers&quot;</span><span class="nt">&gt;</span>192.168.0.135:9092<span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;topics&quot;</span><span class="nt">&gt;</span>indigo_idg<span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;procedure&quot;</span><span class="nt">&gt;</span>EDI.insert<span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;groupid&quot;</span><span class="nt">&gt;</span>1<span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;/configuration&gt;</span>
+<span class="nt">&lt;/import&gt;</span>
+</pre></div>
+
+
+<p>也可以配置多个<code>kafka</code>数据源将数据导入<code>VoltDB</code>当中。如下示例:</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;import&gt;</span> 
+<span class="nt">&lt;configuration</span> <span class="na">type=</span><span class="s">&quot;kafka&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span> 
+  <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;brokers&quot;</span><span class="nt">&gt;</span>kafkasvr:9092<span class="nt">&lt;/property&gt;</span> 
+  <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;topics&quot;</span><span class="nt">&gt;</span>employees<span class="nt">&lt;/property&gt;</span> 
+  <span class="nt">&lt;propertyname</span><span class="err">=&quot;procedure&quot;</span><span class="nt">&gt;</span>EMPLOYEE.insert<span class="nt">&lt;/property&gt;</span> 
+<span class="nt">&lt;/configuration&gt;</span> 
+<span class="nt">&lt;configuration</span> <span class="na">type=</span><span class="s">&quot;kafka&quot;</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span> 
+  <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;brokers&quot;</span><span class="nt">&gt;</span>kafkasvr:9092<span class="nt">&lt;/property&gt;</span> 
+  <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;topics&quot;</span><span class="nt">&gt;</span>managers<span class="nt">&lt;/property&gt;</span> 
+  <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;procedure&quot;</span><span class="nt">&gt;</span>MANAGER.insert<span class="nt">&lt;/property&gt;</span> 
+<span class="nt">&lt;/configuration&gt;</span> 
+<span class="nt">&lt;/import&gt;</span>
+</pre></div>
+
+
+<p>以上从kafka导入数据只是数据源的一种，其他数据源可以查看官方文档。</p>
+<h3>二、Export 数据</h3>
+<p><code>Export</code> 功能现在也暂时只支持企业版。如何做到将voltDB中的数据导出到其他目的地，比如 <code>file</code>,<code>kafka</code>,<code>elasticsearch</code> 等等存储目的地，首先在导出时需要创建 <code>STREAM</code>，<code>STREAM</code> 的作用就是可以将数据不断地以副本的形式导出的各种存储源，它的创建过程以及形式与表一样，但是可以将它看作一种虚拟的表，但是它不支持除Insert以外的其他操作的，指出的是在Export之前必须创建 <code>STREAM</code>。</p>
+<p>创建 <code>STREAM</code> 写法：</p>
+<div class="highlight"><pre><span></span>CREATE STREAM stream-name 
+[PARTITION ON COLUMN column-name]
+[EXPORT TO TARGET export-target-name] ( 
+column-definition [,...]
+);
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">column</span><span class="o">-</span><span class="nl">definition</span><span class="p">:</span> <span class="n">column</span><span class="o">-</span><span class="n">name</span> <span class="n">datatype</span>
+
+<span class="p">[</span><span class="n">DEFAULT</span> <span class="n">value</span> <span class="p">]</span> <span class="p">[</span> <span class="n">NOT</span> <span class="nb">NULL</span> <span class="p">]</span>
+</pre></div>
+
+
+<p>示例：</p>
+<p>创建名为 <code>export_customer</code> 的<code>STREAM</code>：</p>
+<div class="highlight"><pre><span></span>CREATE STREAM export_customer EXPORT TO 
+TARGET archive ( . . . );
+</pre></div>
+
+
+<p>然后需要在配置文件(<code>deployment.xml</code>)文件中配置有关 <code>Export</code> 的属性，比如以下示例是将数据导出格式为 <code>CSV</code> 的 <code>file</code>。</p>
+<div class="highlight"><pre><span></span>    <span class="nt">&lt;export&gt;</span>
+     <span class="nt">&lt;configuration</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span> <span class="na">target=</span><span class="s">&quot;votes&quot;</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>csv<span class="nt">&lt;/property&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;nonce&quot;</span><span class="nt">&gt;</span>MyExport<span class="nt">&lt;/property&gt;</span>
+      <span class="nt">&lt;/configuration&gt;</span>
+<span class="nt">&lt;/export&gt;</span>
+</pre></div>
+
+
+<p>经过上述步骤以后，导出 <code>VoltDB</code> 中的数据需要在 <code>VoltDB</code> 初始化时，或者在使用命令 <code>voltdbadmin update</code> 的时候。</p>
+<p>关于 <code>VoltDB</code> 数据的导入导出先介绍为止。以上内容均来自个人实践总结以及参考官方文档。</p>
+<h3>三、参考文档</h3>
+<ol>
+<li>https://docs.voltdb.com/UsingVoltDB/exportimport.php</li>
+</ol>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2019</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Hansonnnn ",
+  "url" : "https://hansonnnn.github.io",
+  "image": "/images/head.jpg",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

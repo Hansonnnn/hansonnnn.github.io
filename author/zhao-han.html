@@ -99,9 +99,186 @@
 
 <article>
   <header>
-    <h2><a href="https://hansonnnn.github.io/articles/voltdb-introduction.html#voltdb-introduction">VoltDB 简介</a></h2>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-memory.html#voltdb-memory">（七）VoltDB 自定义内存容量</a></h2>
     <p>
-          Posted on 2016-10-11(星期二) 12:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+          Posted on 2017-03-10(星期五) 18:20 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、VoltDB预估内存使用量</h3>
+<h4>1. 预估在表中大小</h4>
+<p>实例：比如varchar类型的字段存储，它的存储大小最大为64bytes或者更大，则应该存储在共享内存当中。有一个8字节的指针存储在元组中，一个24字节的字符串引用对象，以及将数据本身存储在共享   区中所需的空间。在共享区中，在数据被存储为4字节长度，8字节的反指针指向字符串引用对象和数据。</p>
+<p><img alt="image" src="../images/voltdb/voltdb13.png"></p>
+<h4>2.预估在索引中大小</h4>
+<p>表的索引分为树索引和哈希索引，也有两种不同的算法来预估索引在实际中所占到的内存大小
+树索引</p>
+<div class="highlight"><pre><span></span>(sum-of-column-sizes + 8 + 32) * rowcount
+</pre></div>
+
+
+<p>哈希索引</p>
+<div class="highlight"><pre><span></span>(((2 * rowcount) + 1) * 8) + ((sum-of-column-sizes + 32) * rowcount)
+</pre></div>
+
+
+<p>以下是实际估算的一个实例:</p>
+<p><img alt="image" src="../images/voltdb/voltdb13.png"></p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-permission.html#voltdb-permission">（六）VoltDB 权限</a></h2>
+    <p>
+          Posted on 2017-02-22(星期三) 14:22 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、简介</h3>
+<p><code>VoltDB</code> 权限范围包括使用 <code>sqlcmd</code> ，调用存储过程以及访问数据，企业版还涉及到页面访问的权限拦截。<code>VoltDB</code> 的权限设置很方便也很有效。
+<code>VoltDB</code> 的加密方式采用了两种策略，<code>HASH</code> 与 <code>Kerberos</code> 两种加密策略。
+在了解到 <code>VoltDB</code> 加密方式后，需要了解如何使用 <code>VoltDB</code> 权限系统。同样也是通过配置即可完成。</p>
+<h3>二、权限配置</h3>
+<p>使用 VoltDB 权限时需要在集群配置文件(<code>deployment.xml</code>)中通过以下的配置来保证权限系统开启。</p>
+<div class="highlight"><pre><span></span>&lt;security enabled=&quot;true&quot;/&gt;
+</pre></div>
+
+
+<p>然后再使用以下命令完成权限的开启。</p>
+<div class="highlight"><pre><span></span>$ voltadmin update deployment.xml
+</pre></div>
+
+
+<p>接下来需要设置用户与用户密码来确保控制所有用户对 <code>VoltDB</code> 的使用。在配置文件中来使用 <code>&lt;user&gt;</code> 标签来定义一个用户，如果需要定义多个用户，则需要在 <code>&lt;users&gt;</code> 标签下定义多个 <code>&lt;user&gt;</code>，<code>&lt;user …</code></p>
+        <br>
+        <a class="btn" href="https://hansonnnn.github.io/articles/voltdb-permission.html#voltdb-permission">    Continue reading
+</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-store-procedure.html#voltdb-store-procedure">（五）VoltDB 存储过程</a></h2>
+    <p>
+          Posted on 2017-02-10(星期五) 10:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、存储过程简介</h3>
+<p>存储过程是 <code>VoltDB</code> 用来定义事务的，可以将一组 <code>sql</code> 封装到使用Java编写的存储过程当中。当然是可以供外部的客户端调用来实现 <code>VoltDB</code> 的 CRUD 操作。建立存储过程的方式可以有两种，直接采用 DDL 定义或使用 Java 语言。下面将会详细介绍。</p>
+<h4>1.1 简单的存储过程</h4>
+<p>简单的存储过程编写是纯SQL语句实现（DDL定义），<code>VoltDB</code> 提供了SQL运行环境 <code>sqlcmd</code>，在启动 <code>VoltDB</code> 后在另外的 shell 窗口（进入同样的目录）,输入命令 <code>sqlcmd</code>，在进入环境之后，就可以编写SQL，当然在编写存储过程之前，必须确保 <code>VoltDB</code> 当中已经创建了表空间。如下示例是使用SQL创建存储过程的范例；</p>
+<div class="highlight"><pre><span></span>CREATE PROCEDURE leastpopulated 1
+
+AS SELECT TOP …</pre></div>
+        <br>
+        <a class="btn" href="https://hansonnnn.github.io/articles/voltdb-store-procedure.html#voltdb-store-procedure">    Continue reading
+</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-data-usages.html#voltdb-data-usages">（四）VoltDB 数据导入导出</a></h2>
+    <p>
+          Posted on 2017-01-30(星期一) 18:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、Import 数据</h3>
+<p>针对导入数据到 <code>VoltDB</code> 当中，<code>VoltDB</code> 为不同的使用场景提供了不同的解决方案，有可能只需要在第一次初始化数据到数据库中时导入，但也有可能数据实时更新同时就需要数据实时导入到 <code>VoltDB</code> 当中。</p>
+<h4>1.1 使用工具一次性导入</h4>
+<p>在一次性导入的场景当中，比如一次性将数据初始化到 <code>VoltDB</code> 当中，<code>VoltDB</code> 提供了批量导入工具 <code>csvloader</code> 以及 <code>jdbcloader</code>。</p>
+<p>使用 <code>csvloader</code> 工具导入数据到数据库即从 <code>csv</code> 文件导入数据到 <code>VoltDB</code> 。在启动 <code>VoltDB</code> 后，打开另外的 shell 窗口进入相同的目录，使用以下命令：</p>
+<div class="highlight"><pre><span></span><span class="nv">$csvloader</span> city --file<span class="o">=</span>data.csv
+</pre></div>
+
+
+<p>解释一下上面的命令，<code>city</code> 是已经在 <code>VoltDB</code> 中创建的表结构，<code>data.csv</code> 是数据批量存在的文件 …</p>
+        <br>
+        <a class="btn" href="https://hansonnnn.github.io/articles/voltdb-data-usages.html#voltdb-data-usages">    Continue reading
+</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-usages.html#voltdb-usages">（三）VoltDB 的实际使用</a></h2>
+    <p>
+          Posted on 2017-01-20(星期五) 19:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、初始化</h3>
+<p>在完成安装后就可以尝试启动 <code>VoltDB</code>。在启动之前需要先选择一个目录来初始化voltDB根目录，比如单独建立一个 <code>VoltDB</code> 项目的目录。初始化只需一次，但是如果有修改配置或者有重新初始化的必要也可以强制重新初始化。初始化完成后在该目录下便可启动 <code>VoltDB</code>。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> init
+<span class="nv">$voltdb</span> start
+</pre></div>
+
+
+<p>另外初始化时可以指定初始化目录及VoltDB配置文件，使用 <code>--D</code> 参数及 <code>--config</code> 参数。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> init --D<span class="o">=</span> --config<span class="o">=</span>
+</pre></div>
+
+
+<h3>二、集群部署</h3>
+<p>集群下部署安装 VoltDB 与单节点部署安装流程一致，只需安装 VoltDB 到不同的节点。与单节点相同，集群下启动 VoltDB 之前需要为每台节点初始化 VoltDB 根目录。另外，同一个集群下的所有节点的配置文件要保持完全一致，所以在初始化根目录时，需要指定相同的配置文件。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> init -D ~/voltdb --config<span class="o">=</span>depolyment …</pre></div>
+        <br>
+        <a class="btn" href="https://hansonnnn.github.io/articles/voltdb-usages.html#voltdb-usages">    Continue reading
+</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/install-voltdb.html#install-voltdb">（二）部署 VoltDB</a></h2>
+    <p>
+          Posted on 2017-01-12(星期四) 12:20 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+
+    </p>
+  </header>
+  <div>
+      <h3>一、安装</h3>
+<p>以下安装步骤均基于社区版 6.9 Version，安装操作系统 Ubuntu 16.04 ，企业版的安装不做详细介绍。</p>
+<p>下载请移步：
+https://github.com/VoltDB/voltdb/releases/tag/voltdb-6.9</p>
+<h4>1.1 安装依赖包</h4>
+<p>安装 Java 1.8</p>
+<p><code>vim /etc/profile</code>, 增加以下内容:</p>
+<div class="highlight"><pre><span></span><span class="c1"># vim </span>
+<span class="nv">JAVA_HOME</span><span class="o">=</span>/home/smith/elk/cloudscope/jdk1.8.0_111
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/lib/
+<span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$JAVA_HOME</span>/bin
+<span class="nb">export</span> PATH …</pre></div>
+        <br>
+        <a class="btn" href="https://hansonnnn.github.io/articles/install-voltdb.html#install-voltdb">    Continue reading
+</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://hansonnnn.github.io/articles/voltdb-introduction.html#voltdb-introduction">（一）VoltDB 简介</a></h2>
+    <p>
+          Posted on 2017-01-11(星期三) 12:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
 
 
 

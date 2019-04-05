@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet/less" type="text/css" href="https://hansonnnn.github.io/theme/stylesheet/style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/solid.css">
+
+    <link href="https://hansonnnn.github.io/static/custom.css" rel="stylesheet">
+
+
+
+    <link rel="shortcut icon" href="/images/fav.ico" type="image/x-icon">
+    <link rel="icon" href="/images/fav.ico" type="image/x-icon">
+
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#333333">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#333333">
+
+<meta name="author" content="Zhao Han" />
+<meta name="description" content="一、初始化 在完成安装后就可以尝试启动 VoltDB。在启动之前需要先选择一个目录来初始化voltDB根目录，比如单独建立一个 VoltDB 项目的目录。初始化只需一次，但是如果有修改配置或者有重新初始化的必要也可以强制重新初始化。初始化完成后在该目录下便可启动 VoltDB。 $voltdb init $voltdb start 另外初始化时可以指定初始化目录及VoltDB配置文件，使用 --D 参数及 --config 参数。 $voltdb init --D= --config= 二、集群部署 集群下部署安装 VoltDB 与单节点部署安装流程一致，只需安装 VoltDB 到不同的节点。与单节点相同，集群下启动 VoltDB 之前需要为每台节点初始化 VoltDB 根目录。另外，同一个集群下的所有节点的配置文件要保持完全一致，所以在初始化根目录时，需要指定相同的配置文件。 $voltdb init -D ~/voltdb --config=depolyment …" />
+<meta name="keywords" content="">
+
+<meta property="og:site_name" content="Hansonnnn"/>
+<meta property="og:title" content="（三）VoltDB 的实际使用"/>
+<meta property="og:description" content="一、初始化 在完成安装后就可以尝试启动 VoltDB。在启动之前需要先选择一个目录来初始化voltDB根目录，比如单独建立一个 VoltDB 项目的目录。初始化只需一次，但是如果有修改配置或者有重新初始化的必要也可以强制重新初始化。初始化完成后在该目录下便可启动 VoltDB。 $voltdb init $voltdb start 另外初始化时可以指定初始化目录及VoltDB配置文件，使用 --D 参数及 --config 参数。 $voltdb init --D= --config= 二、集群部署 集群下部署安装 VoltDB 与单节点部署安装流程一致，只需安装 VoltDB 到不同的节点。与单节点相同，集群下启动 VoltDB 之前需要为每台节点初始化 VoltDB 根目录。另外，同一个集群下的所有节点的配置文件要保持完全一致，所以在初始化根目录时，需要指定相同的配置文件。 $voltdb init -D ~/voltdb --config=depolyment …"/>
+<meta property="og:locale" content="zh_CN"/>
+<meta property="og:url" content="https://hansonnnn.github.io/articles/voltdb-usages.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-01-20 19:00:00+08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://hansonnnn.github.io/author/zhao-han.html">
+<meta property="article:section" content="VoltDB"/>
+<meta property="og:image" content="/images/head.jpg">
+
+  <title>Hansonnnn &ndash; （三）VoltDB 的实际使用</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://hansonnnn.github.io">
+        <img src="/images/head.jpg" alt="" title="">
+      </a>
+      <h1><a href="https://hansonnnn.github.io"></a></h1>
+
+<p>test</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://hansonnnn.github.io/pages/about-me.html#about-me">About Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/Hansonnnn" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-mail" href="hanz.yw1024@gmail.com" target="_blank">
+            <i class="fab fa-mail">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="https://hansonnnn.github.io">    Home
+</a>
+
+      <a href="/archives.html">Archives</a>
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="voltdb-usages">（三）VoltDB 的实际使用</h1>
+    <p>
+          Posted on 2017-01-20(星期五) 19:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h3>一、初始化</h3>
+<p>在完成安装后就可以尝试启动 <code>VoltDB</code>。在启动之前需要先选择一个目录来初始化voltDB根目录，比如单独建立一个 <code>VoltDB</code> 项目的目录。初始化只需一次，但是如果有修改配置或者有重新初始化的必要也可以强制重新初始化。初始化完成后在该目录下便可启动 <code>VoltDB</code>。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> init
+<span class="nv">$voltdb</span> start
+</pre></div>
+
+
+<p>另外初始化时可以指定初始化目录及VoltDB配置文件，使用 <code>--D</code> 参数及 <code>--config</code> 参数。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> init --D<span class="o">=</span> --config<span class="o">=</span>
+</pre></div>
+
+
+<h3>二、集群部署</h3>
+<p>集群下部署安装 VoltDB 与单节点部署安装流程一致，只需安装 VoltDB 到不同的节点。与单节点相同，集群下启动 VoltDB 之前需要为每台节点初始化 VoltDB 根目录。另外，同一个集群下的所有节点的配置文件要保持完全一致，所以在初始化根目录时，需要指定相同的配置文件。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> init -D ~/voltdb --config<span class="o">=</span>depolyment.xml
+</pre></div>
+
+
+<p>其中：
+- <code>-D</code>： 代表<code>VoltDB</code>初始化的根目录（可以指定，也可以不加此参数，默认代表在当前目录下初始化
+- <code>--config</code>：指定了目录下的VoltDB的配置文件，在集群启动的时候需要指定这个参数。</p>
+<p>初始化后启动集群中的<code>VoltDB</code>数据库需要确认以下信息：</p>
+<ol>
+<li>使用 <code>--count</code> 来指定组成集群的节点数</li>
+<li>使用 <code>--host</code></li>
+</ol>
+<p>或者 <code>-H</code> 选项来指定集群中的节点，如以下示例：</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> start --count<span class="o">=</span><span class="m">5</span> --host<span class="o">=</span>voltnode1,voltnode2,voltnode3,voltnode4,voltnode5
+</pre></div>
+
+
+<p>指定集群节点，这时候 <code>host</code> 参数已经指定了具体的节点，所以集群节点数也就默认设置为5，也不需要再去指定 count 参数。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> start --host<span class="o">=</span>node2,node3,node4
+</pre></div>
+
+
+<h3>三、集群动态增加节点以及恢复节点</h3>
+<p>这种高可用方案必须基于企业版。如果出现集群节点不足以应对现有数据量，导致整个集群的计算能力不够高，可以动态增加节点来达到横向扩展，并且这过程中集群不需停机可以保证正常的工作量。而对于恢复节点，当出现适量范围内的节点宕机，集群可以保持正常工作，并且已宕机的节点在经过修复后仍然可以恢复到集群中工作，这种高可用方案很大的提高了集群容量的弹性和集群的安全性。决定集群高可用的参数与 <code>VoltDB</code> 的配置参数 <code>k-safty</code> 有关，详细设置细节同样将会在以下章节中讲述。</p>
+<p>示例:向集群中动态增加节点，在新节点已经初始化后的根目录下执行以下命令</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> start --add --host<span class="o">=</span>server1,server2
+</pre></div>
+
+
+<p>注意：使用 <code>--add</code> 选项时其后面的 <code>--host</code> 选项的服务器个数必须大于 <code>k-safty</code> 设置值。</p>
+<p>还有另外一种集群动态增加节点的方式，也是用于节点恢复。如下图，3个节点的集群，如果出现N1节点的宕机，那么他恢复集群的方式可以让它在重新启动时指向N2的地址，就可以做到节点的添加以及恢复。</p>
+<div class="highlight"><pre><span></span><span class="nv">$voltdb</span> start --host<span class="o">=</span>N2
+</pre></div>
+
+
+<p><img alt="image" src="../images/voltdb/voltdb9.png"></p>
+<h3>四、最大堆（Java HEAP）设置</h3>
+<p><code>VoltDB</code> 的底层一部分使用 <code>java</code> ，另外一部分使用的 <code>C</code> 以及 <code>C++</code> ，从而 <code>VoltDB</code> 需要保证足够堆的大小来完成其部分功能。默认情况下 <code>VoltDB</code> 的最大堆设置大小为 2GB，但是在实际中如果使用了大量的存储过程以及 View 这些需要耗去大量堆空间的操作，默认值终究是不够使用的，所以在启动前可以分配给堆合适的空间来保证其正常工作。</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">VOLTDB_HEAPMAX</span><span class="o">=</span><span class="s2">&quot;3072&quot;</span>
+</pre></div>
+
+
+<p>上述命令是将最大堆大小更改为3GB。</p>
+<h3>五、配置（deployment.xml）</h3>
+<p><code>VoltDB</code> 的配置文件非常关键，关系到整个集群的效率以及最佳使用。所以需要对配置文件做详细的解析。关于配置文件主要会通过两项参数 <code>k-safty</code> 以及 <code>sitesperhost</code> 来讲述。</p>
+<h4>5.1 k-safty 介绍以及设置</h4>
+<p><code>VoltDB</code> 的高可用集群方案是通过 <code>k-safty</code> 来完成。当然，这种方案同样只支持于企业版。在 <code>VoltDB</code> 当中，没有主从节点之分，它是一种 <code>shard-nothing</code> 结构，也就是说集群中所有的节点都是同一个级别。分区时都是平均分配数据，并且所有的节点读写速度全部一致，其实这也是 <code>VoltDB</code> 处理速度快的一方面原因。<code>k-safty</code> 的设置可以保证在集群启动之后在集群下的每个节点都会保存一个数据副本以保证任何节点宕机后的容灾，而不至于使集群数据丢失或者集群丧失计算能力。</p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="nt">&lt;deployment&gt;</span>
+   <span class="nt">&lt;cluster</span> <span class="err">.</span> <span class="err">.</span> <span class="err">.</span>
+            <span class="na">k-factor=</span><span class="s">”1”</span>   <span class="nt">/&gt;</span>
+<span class="nt">&lt;/deployment&gt;</span>
+</pre></div>
+
+
+<h4>5.2 sitesperhost 介绍以及设置</h4>
+<p><code>sitesperhost</code> 参数合理设置是关系到整个集群的计算能力，也关系到整个集群当中 <code>partition</code> 的个数，<code>sitesperhost</code> 的值乘以集群节点数就是集群的分区数。在 <code>VoltDB</code> 当中 <code>sitesperhost</code> 的值设定最多不可以超过24，最佳实践通常在4到16。但是其值的设定需要不断的集群测试来设定，通常其值的设置是通过3/4倍的逻辑cpu个数来设定；现有4c,2c*2三个节点组成的集群，那么这个集群的 <code>sitesperhost</code> 的值范围会在3~4之间设置，但是设置3为最佳，那么此时集群的总的分区数为9。另外 <code>VoltDB</code> 的每个分区都是由集群当中的每个cpu绑定管理，在查询时， <code>VoltDB</code> 根据分区来执行查询(分区键设计以及分区HASH决定)，从而 <code>VoltDB</code> 对于单机以及集群cpu要求较高。</p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="nt">&lt;deployment&gt;</span>
+   <span class="nt">&lt;cluster</span> <span class="err">.</span> <span class="err">.</span> <span class="err">.</span>
+            <span class="na">sitesperhost=</span><span class="s">&quot;3&quot;</span>
+   <span class="nt">/&gt;</span>
+<span class="nt">&lt;/deployment&gt;</span>
+</pre></div>
+
+
+<p>以上是关于VoltDB使用上的介绍以及实践经验，不足处也请多多指教。以下会继续更新VoltDB相关的介绍使用文档。</p>
+<h3>六、参考文档</h3>
+<ol>
+<li>https://docs.voltdb.com/UsingVoltDB/ConfigStructure.php</li>
+</ol>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2019</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Hansonnnn ",
+  "url" : "https://hansonnnn.github.io",
+  "image": "/images/head.jpg",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

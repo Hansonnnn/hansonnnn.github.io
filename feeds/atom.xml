@@ -1,5 +1,604 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Hansonnnn</title><link href="https://hansonnnn.github.io/" rel="alternate"></link><link href="https://hansonnnn.github.io/feeds/atom.xml" rel="self"></link><id>https://hansonnnn.github.io/</id><updated>2016-10-11T12:00:00+08:00</updated><subtitle>test</subtitle><entry><title>VoltDB 简介</title><link href="https://hansonnnn.github.io/articles/voltdb-introduction.html" rel="alternate"></link><published>2016-10-11T12:00:00+08:00</published><updated>2016-10-11T12:00:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2016-10-11:/articles/voltdb-introduction.html</id><summary type="html">&lt;h3&gt;一、VoltDB 简介&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Hansonnnn</title><link href="https://hansonnnn.github.io/" rel="alternate"></link><link href="https://hansonnnn.github.io/feeds/atom.xml" rel="self"></link><id>https://hansonnnn.github.io/</id><updated>2017-03-10T18:20:00+08:00</updated><subtitle>test</subtitle><entry><title>（七）VoltDB 自定义内存容量</title><link href="https://hansonnnn.github.io/articles/voltdb-memory.html" rel="alternate"></link><published>2017-03-10T18:20:00+08:00</published><updated>2017-03-10T18:20:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-03-10:/articles/voltdb-memory.html</id><summary type="html">&lt;h3&gt;一、VoltDB预估内存使用量&lt;/h3&gt;
+&lt;h4&gt;1. 预估在表中大小&lt;/h4&gt;
+&lt;p&gt;实例：比如varchar类型的字段存储，它的存储大小最大为64bytes或者更大，则应该存储在共享内存当中。有一个8字节的指针存储在元组中，一个24字节的字符串引用对象，以及将数据本身存储在共享   区中所需的空间。在共享区中，在数据被存储为4字节长度，8字节的反指针指向字符串引用对象和数据。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image" src="../images/voltdb/voltdb13.png"&gt;&lt;/p&gt;
+&lt;h4&gt;2.预估在索引中大小&lt;/h4&gt;
+&lt;p&gt;表的索引分为树索引和哈希索引，也有两种不同的算法来预估索引在实际中所占到的内存大小
+树索引&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(sum-of-column-sizes + 8 + 32) * rowcount
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;哈希索引&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(((2 * rowcount) + 1) * 8) + ((sum-of-column-sizes + 32) * rowcount)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以下是实际估算的一个实例:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image" src="../images/voltdb/voltdb13.png"&gt;&lt;/p&gt;</summary><content type="html">&lt;h3&gt;一、VoltDB预估内存使用量&lt;/h3&gt;
+&lt;h4&gt;1. 预估在表中大小&lt;/h4&gt;
+&lt;p&gt;实例：比如varchar类型的字段存储，它的存储大小最大为64bytes或者更大，则应该存储在共享内存当中。有一个8字节的指针存储在元组中，一个24字节的字符串引用对象，以及将数据本身存储在共享   区中所需的空间。在共享区中，在数据被存储为4字节长度，8字节的反指针指向字符串引用对象和数据。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image" src="../images/voltdb/voltdb13.png"&gt;&lt;/p&gt;
+&lt;h4&gt;2.预估在索引中大小&lt;/h4&gt;
+&lt;p&gt;表的索引分为树索引和哈希索引，也有两种不同的算法来预估索引在实际中所占到的内存大小
+树索引&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(sum-of-column-sizes + 8 + 32) * rowcount
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;哈希索引&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(((2 * rowcount) + 1) * 8) + ((sum-of-column-sizes + 32) * rowcount)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以下是实际估算的一个实例:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image" src="../images/voltdb/voltdb13.png"&gt;&lt;/p&gt;</content></entry><entry><title>（六）VoltDB 权限</title><link href="https://hansonnnn.github.io/articles/voltdb-permission.html" rel="alternate"></link><published>2017-02-22T14:22:00+08:00</published><updated>2017-02-22T14:22:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-02-22:/articles/voltdb-permission.html</id><summary type="html">&lt;h3&gt;一、简介&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 权限范围包括使用 &lt;code&gt;sqlcmd&lt;/code&gt; ，调用存储过程以及访问数据，企业版还涉及到页面访问的权限拦截。&lt;code&gt;VoltDB&lt;/code&gt; 的权限设置很方便也很有效。
+&lt;code&gt;VoltDB&lt;/code&gt; 的加密方式采用了两种策略，&lt;code&gt;HASH&lt;/code&gt; 与 &lt;code&gt;Kerberos&lt;/code&gt; 两种加密策略。
+在了解到 &lt;code&gt;VoltDB&lt;/code&gt; 加密方式后，需要了解如何使用 &lt;code&gt;VoltDB&lt;/code&gt; 权限系统。同样也是通过配置即可完成。&lt;/p&gt;
+&lt;h3&gt;二、权限配置&lt;/h3&gt;
+&lt;p&gt;使用 VoltDB 权限时需要在集群配置文件(&lt;code&gt;deployment.xml&lt;/code&gt;)中通过以下的配置来保证权限系统开启。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;security enabled=&amp;quot;true&amp;quot;/&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后再使用以下命令完成权限的开启。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ voltadmin update deployment.xml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;接下来需要设置用户与用户密码来确保控制所有用户对 &lt;code&gt;VoltDB&lt;/code&gt; 的使用。在配置文件中来使用 &lt;code&gt;&amp;lt;user&amp;gt;&lt;/code&gt; 标签来定义一个用户，如果需要定义多个用户，则需要在 &lt;code&gt;&amp;lt;users&amp;gt;&lt;/code&gt; 标签下定义多个 &lt;code&gt;&amp;lt;user&amp;gt;&lt;/code&gt;，&lt;code&gt;&amp;lt;user …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;h3&gt;一、简介&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 权限范围包括使用 &lt;code&gt;sqlcmd&lt;/code&gt; ，调用存储过程以及访问数据，企业版还涉及到页面访问的权限拦截。&lt;code&gt;VoltDB&lt;/code&gt; 的权限设置很方便也很有效。
+&lt;code&gt;VoltDB&lt;/code&gt; 的加密方式采用了两种策略，&lt;code&gt;HASH&lt;/code&gt; 与 &lt;code&gt;Kerberos&lt;/code&gt; 两种加密策略。
+在了解到 &lt;code&gt;VoltDB&lt;/code&gt; 加密方式后，需要了解如何使用 &lt;code&gt;VoltDB&lt;/code&gt; 权限系统。同样也是通过配置即可完成。&lt;/p&gt;
+&lt;h3&gt;二、权限配置&lt;/h3&gt;
+&lt;p&gt;使用 VoltDB 权限时需要在集群配置文件(&lt;code&gt;deployment.xml&lt;/code&gt;)中通过以下的配置来保证权限系统开启。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;security enabled=&amp;quot;true&amp;quot;/&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后再使用以下命令完成权限的开启。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ voltadmin update deployment.xml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;接下来需要设置用户与用户密码来确保控制所有用户对 &lt;code&gt;VoltDB&lt;/code&gt; 的使用。在配置文件中来使用 &lt;code&gt;&amp;lt;user&amp;gt;&lt;/code&gt; 标签来定义一个用户，如果需要定义多个用户，则需要在 &lt;code&gt;&amp;lt;users&amp;gt;&lt;/code&gt; 标签下定义多个 &lt;code&gt;&amp;lt;user&amp;gt;&lt;/code&gt;，&lt;code&gt;&amp;lt;user&amp;gt;&lt;/code&gt; 标签中包括属性 &lt;code&gt;name&lt;/code&gt; (用户名)，&lt;code&gt;password&lt;/code&gt; (用户密码),&lt;code&gt;roles&lt;/code&gt; (定义用户角色，如管理员，&lt;code&gt;DBA&lt;/code&gt;，开发人员等)。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;users&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;user&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;operator&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;password=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;mech&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;roles=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;administrator,ops&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;user&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;developer&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;password=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tech&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;roles=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ops,dbuser&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/users&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后再使用如下命令更新配置文件：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ voltadmin update deployment.xml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;更新完成后，再次访问&lt;code&gt;sqlcmd&lt;/code&gt;工具接口就需要输入权限认证了，使用下面的命令，在登入sqlcmd时指定用户名以及用户密码&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sqlcmd --user&lt;span class="o"&gt;=&lt;/span&gt;operator --password&lt;span class="o"&gt;=&lt;/span&gt;mech
+&lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>（五）VoltDB 存储过程</title><link href="https://hansonnnn.github.io/articles/voltdb-store-procedure.html" rel="alternate"></link><published>2017-02-10T10:00:00+08:00</published><updated>2017-02-10T10:00:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-02-10:/articles/voltdb-store-procedure.html</id><summary type="html">&lt;h3&gt;一、存储过程简介&lt;/h3&gt;
+&lt;p&gt;存储过程是 &lt;code&gt;VoltDB&lt;/code&gt; 用来定义事务的，可以将一组 &lt;code&gt;sql&lt;/code&gt; 封装到使用Java编写的存储过程当中。当然是可以供外部的客户端调用来实现 &lt;code&gt;VoltDB&lt;/code&gt; 的 CRUD 操作。建立存储过程的方式可以有两种，直接采用 DDL 定义或使用 Java 语言。下面将会详细介绍。&lt;/p&gt;
+&lt;h4&gt;1.1 简单的存储过程&lt;/h4&gt;
+&lt;p&gt;简单的存储过程编写是纯SQL语句实现（DDL定义），&lt;code&gt;VoltDB&lt;/code&gt; 提供了SQL运行环境 &lt;code&gt;sqlcmd&lt;/code&gt;，在启动 &lt;code&gt;VoltDB&lt;/code&gt; 后在另外的 shell 窗口（进入同样的目录）,输入命令 &lt;code&gt;sqlcmd&lt;/code&gt;，在进入环境之后，就可以编写SQL，当然在编写存储过程之前，必须确保 &lt;code&gt;VoltDB&lt;/code&gt; 当中已经创建了表空间。如下示例是使用SQL创建存储过程的范例；&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE PROCEDURE leastpopulated 1
+
+AS SELECT TOP …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h3&gt;一、存储过程简介&lt;/h3&gt;
+&lt;p&gt;存储过程是 &lt;code&gt;VoltDB&lt;/code&gt; 用来定义事务的，可以将一组 &lt;code&gt;sql&lt;/code&gt; 封装到使用Java编写的存储过程当中。当然是可以供外部的客户端调用来实现 &lt;code&gt;VoltDB&lt;/code&gt; 的 CRUD 操作。建立存储过程的方式可以有两种，直接采用 DDL 定义或使用 Java 语言。下面将会详细介绍。&lt;/p&gt;
+&lt;h4&gt;1.1 简单的存储过程&lt;/h4&gt;
+&lt;p&gt;简单的存储过程编写是纯SQL语句实现（DDL定义），&lt;code&gt;VoltDB&lt;/code&gt; 提供了SQL运行环境 &lt;code&gt;sqlcmd&lt;/code&gt;，在启动 &lt;code&gt;VoltDB&lt;/code&gt; 后在另外的 shell 窗口（进入同样的目录）,输入命令 &lt;code&gt;sqlcmd&lt;/code&gt;，在进入环境之后，就可以编写SQL，当然在编写存储过程之前，必须确保 &lt;code&gt;VoltDB&lt;/code&gt; 当中已经创建了表空间。如下示例是使用SQL创建存储过程的范例；&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE PROCEDURE leastpopulated 1
+
+AS SELECT TOP 1 county, abbreviation,
+
+population FROM people, states WHERE
+
+people.state_num=?  2 
+
+AND people.state_num=states.state_num
+
+ORDER BY population ASC;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;为建立的存储过程起一个名字&lt;/li&gt;
+&lt;li&gt;占位符的形式，接收传入的参数&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;上述只是正常情况下的编写，考虑到 VoltDB 分区特性，会出现需要查询的字段是作为分区键的，这时候可以在建存储过程时再加上 &lt;code&gt;PARTITION PROCEDURE&lt;/code&gt; 。还是上述例子，这次 &lt;code&gt;state_num&lt;/code&gt; 作为分区字段，存储过程可以这样写：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE PROCEDURE leastpopulated 
+
+PARTITION ON TABLE people COLUMN
+
+state_num AS
+SELECT TOP 1 county, abbreviation,
+
+population FROM people, states WHERE
+
+people.state_num=? AND 
+
+people.state_num=states.state_num ORDER 
+
+BY population ASC;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;建立之后，可以在 &lt;code&gt;sqlcmd&lt;/code&gt; 窗口下调用它，另外也可以在外部通过客户端调用来使用。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&amp;gt; &lt;span class="nb"&gt;exec&lt;/span&gt; leastpopulated &lt;span class="m"&gt;6&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上述情况是通过SQL的DDL来建立简单的存储过程，但是比如当需要编写一组SQL定义一个事务，就需要复杂的存储过程来定义，即使用Java封装存储过程。&lt;/p&gt;
+&lt;h4&gt;1.2 复杂的存储过程&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 提供使用 java 来封装基于 &lt;code&gt;sql99&lt;/code&gt; 标准的存储过程，这类存储过程更过于复杂，配合多次查询以及需要查询后的结果用来计算，&lt;code&gt;VoltDB&lt;/code&gt; 提供了这类存储过程标准的书写方式:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.voltdb.*&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt; 
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Procedure&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;VoltProcedure&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; 
+&lt;span class="c1"&gt;// Declare SQL statements ... &lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;datatype&lt;/span&gt; &lt;span class="nf"&gt;run&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="n"&gt;arguments&lt;/span&gt; &lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="kd"&gt;throws&lt;/span&gt; &lt;span class="n"&gt;VoltAbortException&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; 
+&lt;span class="c1"&gt;// Body of the Stored Procedure ... &lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt; 
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;首先必须引用 &lt;code&gt;VoltDB&lt;/code&gt; 所有的 API 包，在编写类时必须继承 &lt;code&gt;VoltProcedure&lt;/code&gt; 接口。然后就是 SQL 的声明，在使用到参数的地方必须用占位符代替。下面将演示一段最简单的存储过程。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;org.voltdb.*&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="nd"&gt;@ProcInfo&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;partitionInfo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;HELLOWORLD.DIALECT: 2&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;singlePartition&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Insert&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;VoltProcedure&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;SQLStmt&lt;/span&gt; &lt;span class="n"&gt;sql&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;SQLStmt&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+   &lt;span class="s"&gt;&amp;quot;INSERT INTO HELLOWORLD VALUES (?, ?, ?);&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;VoltTable&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="nf"&gt;run&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;hello&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;world&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;language&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+   &lt;span class="kd"&gt;throws&lt;/span&gt; &lt;span class="n"&gt;VoltAbortException&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;voltQueueSQL&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sql&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hello&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;world&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;language&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+  &lt;span class="n"&gt;voltExecuteSQL&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;接下来需要编译 java 文件，然后打包成 jar 包，最后再发布到 &lt;code&gt;VoltDB&lt;/code&gt; 中。&lt;/p&gt;
+&lt;h4&gt;1.3 过程实现&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;编译，编译时需要指定到voltdb目录下，如下:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$javac&lt;/span&gt; -cp &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$CLASSPATH&lt;/span&gt;&lt;span class="s2"&gt;:/home/smith/voltDB/voltdb-voltdb-6.9/voltdb/*&amp;quot;&lt;/span&gt;  insert.java
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;打包&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$jar&lt;/span&gt; cvf Select.jar insert.class
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;发布到数据库&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="m"&gt;21&lt;/span&gt;&amp;gt; load classes insert.jar&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在部署到数据库之后需要声明定义这个存储过程，如上 &lt;code&gt;insert.jar&lt;/code&gt; 已经发布到 &lt;code&gt;VoltDB&lt;/code&gt; 当中，然后在 sqlcmd 下执行如下 sql 完成存储过程在数据库中的声明：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;22&amp;gt;CREATE PROCEDURE FROM CLASS insert;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后查看已经在 VoltDB 中声明好的存储过程&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;23&amp;gt;Show procedure；
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;二、查看执行计划&lt;/h3&gt;
+&lt;p&gt;对于已创建的或者要执行的存储过程，可以查看执行计划，执行计划解释了存储过程。&lt;code&gt;VoltDB&lt;/code&gt; 提供了两个方法来查看执行计划，可以在sqlcmd中查看执行计划，比如：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1&amp;gt;explain select count(*) from votes;
+2&amp;gt;explainproc Initialize;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Initialize&lt;/code&gt;为声明的一个存储过程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在阅读执行计划的时候需要从下纸上的顺序阅读。可以看到上述存储过程 Initialize 当中包含了三段 SQL 语句，从下到上的执行顺序。&lt;/p&gt;
+&lt;h3&gt;三、Client 调用存储过程&lt;/h3&gt;
+&lt;p&gt;经过编写，编译以及部署后的存储过程在执行时，可以通过外部的 &lt;code&gt;Client&lt;/code&gt; 客户端调用其，&lt;code&gt;VoltDB&lt;/code&gt; 提供了三种方式为调用提供便利，一个 &lt;code&gt;Client&lt;/code&gt; 调用 &lt;code&gt;VoltDB&lt;/code&gt; 存储过程的流程应该为：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;建立连接&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;voltdb&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Client&lt;/span&gt; &lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;myApp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ClientFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createClient&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;localhost&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;21212&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;调用存储过程&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;callProcedure&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;HELLOWORLD.insert&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Hello&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;World&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;English&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;callProcedure&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;HELLOWORLD.insert&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Bonjour&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Monde&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;French&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;callProcedure&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;HELLOWORLD.insert&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Hola&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Mundo&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Spanish&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;接受反馈消息：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getStatus&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;ClientResponse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;SUCCESS&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;err&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getStatusString&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+    &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;exit&lt;/span&gt;&lt;span class="o"&gt;(-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;VoltTable&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getResults&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;length&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;].&lt;/span&gt;&lt;span class="na"&gt;getRowCount&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;printf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;I can&amp;#39;t say Hello in that language.\n&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;exit&lt;/span&gt;&lt;span class="o"&gt;(-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;关闭连接&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="k"&gt;try&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;drain&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;myApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;close&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+   &lt;span class="o"&gt;}&lt;/span&gt; &lt;span class="k"&gt;catch&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;InterruptedException&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;printStackTrace&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+ &lt;span class="o"&gt;}&lt;/span&gt;
+ &lt;span class="err"&gt;```&lt;/span&gt;
+
+&lt;span class="n"&gt;注意&lt;/span&gt;&lt;span class="err"&gt;：&lt;/span&gt;&lt;span class="n"&gt;在建立连接的时候&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;可以只做集群的单节点连接&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;如上述程序所示&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;但也可以做多节点的连接&lt;/span&gt;&lt;span class="err"&gt;，`&lt;/span&gt;&lt;span class="n"&gt;VoltDB&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt; &lt;span class="n"&gt;在&lt;/span&gt; &lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt; &lt;span class="n"&gt;属性当中提供了一种简便但又非常实用的属性&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;topology&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;aware&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="n"&gt;可以在创建连接的时候设置&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;只需做到连接单个节点&lt;/span&gt;&lt;span class="err"&gt;，&lt;/span&gt;&lt;span class="n"&gt;同时使用这个属性对于应对节点的状态以及集群节点个数的增加非常轻松&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;
+&lt;span class="err"&gt;```&lt;/span&gt;&lt;span class="n"&gt;java&lt;/span&gt;
+&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;voltdb&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Client&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt; 
+&lt;span class="n"&gt;ClientConfig&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;ClientConfig&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setTopologyChangeAware&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;try&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; 
+ &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ClientFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createClient&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;localhost&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;21212&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;&lt;span class="k"&gt;catch&lt;/span&gt;&lt;span class="err"&gt;（&lt;/span&gt;&lt;span class="n"&gt;Exception&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="err"&gt;）&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上述过程演示了标准的 &lt;code&gt;Client&lt;/code&gt; 调用存储过程的流程。下面会介绍使用HTTP 接口以及JDBC接口调用存储过程。&lt;/p&gt;
+&lt;h4&gt;3.1  HTTP client程序调用&lt;/h4&gt;
+&lt;p&gt;在使用HTTP方式调用Client之前，需要在voltDB的配置文件（&lt;code&gt;deployment.xml&lt;/code&gt;）中将有关配置（&lt;httpd&gt;）项填写完成，如下示例，&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;httpd&lt;/span&gt; &lt;span class="na"&gt;enabled=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;port=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;8081&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;jsonapi&lt;/span&gt; &lt;span class="na"&gt;enabled=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/httpd&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;端口号指定为&lt;code&gt;8081&lt;/code&gt;，也可以在启动时使用 &lt;code&gt;--http&lt;/code&gt;选项指定端口号。也可以使用SSL加密，可以使用 &lt;code&gt;&amp;lt;https&amp;gt;&lt;/code&gt; 子元素来指定。
+在打开HTTP接口之后，就可以通过其官方提供的标准访问路径调用存储过程。访问路径：&lt;code&gt;http://&amp;lt;server&amp;gt;:8080/api/1.0/&lt;/code&gt;,其之后需要带着要调用的存储过程以及所需的参数，如下表所示：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="image" src="../images/voltdb/voltdb12.png"&gt;&lt;/p&gt;
+&lt;p&gt;可以在浏览器网址输入栏中输入以上URL并带上所需参数，无论调用成功与否都会返回一段 JSON 字符串，字符串中包含状态值，异常以及数据库返回的数据结果等。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{  appstatus           (integer, boolean)
+   appstatusstring     (string)
+   exception           (integer)
+   results             (array)
+     [                 (object, VoltTable)
+         {  data       (array)
+              [        (any type)
+              ]
+            schema     (array)
+              [  name  (string)
+                 type  (integer, enumerated)
+              ]
+            status     (integer, boolean)
+         }
+     ]
+   status              (integer)
+   statusstring        (string)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外 HTTP 调用方式支持 python, perl, C#, PHP 以及使用 JQuery 调用。&lt;/p&gt;
+&lt;h4&gt;3.2 JDBC client 程序调用&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 与普通关系型数据库一样，同样也是支持 &lt;code&gt;JDBC&lt;/code&gt; 接口来调用存储过程。很方便，不需要引入 &lt;code&gt;VoltDB&lt;/code&gt; 额外的 API 包，方法一致。
+VoltDB 提供了与连接关系型数据一样的工具，驱动包以及 URL，使用 &lt;code&gt;Class.forName()&lt;/code&gt; 方法来加载 JDBC 驱动包，数据库标准路径：&lt;code&gt;jdbc:voltdb://&amp;lt;server&amp;gt;:&amp;lt;port&amp;gt;&lt;/code&gt; ,如果需要连接多个节点，则使用 &lt;code&gt;,&lt;/code&gt; 隔开，默认端口号为 &lt;code&gt;21212&lt;/code&gt; .另外可以在路径上加入额外的参数比如在丢失与 &lt;code&gt;VoltDB&lt;/code&gt; 的连接后可以设置 &lt;code&gt;autoconnect&lt;/code&gt; 属性实现重新连接。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Class&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;forName&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;org.voltdb.jdbc.Driver&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;Connection&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;DriverManager&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;jdbc:voltdb://svr1:21212,svr2:21212?autoreconnect=true&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;建立连接之后可以编写 SQL 执行，但在这里重点介绍调用存储过程。如下示例程序所示：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;CallableStatement&lt;/span&gt; &lt;span class="n"&gt;proc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;prepareCall&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{call Select(?)}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setString&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;French&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;executeQuery&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;next&lt;/span&gt;&lt;span class="o"&gt;())&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+   &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;printf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;%s, %s!\n&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getString&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; 
+   &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getString&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;四、WEB 项目使用 Client&lt;/h3&gt;
+&lt;p&gt;如果需要在实际的web项目中使用 &lt;code&gt;Client&lt;/code&gt; 客户端来调用存储过程，可以通过使用 &lt;code&gt;maven&lt;/code&gt; 管理工具引入所需依赖包就可以在web项目中引入 &lt;code&gt;VoltDB&lt;/code&gt; 有关的 API 包及方法。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.voltdb&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;voltdbclient&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;5.1&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;  
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;关于 &lt;code&gt;VoltDB&lt;/code&gt; 存储过程以及存储过程客户端调用介绍就先到此为止，以后有新的理解还会继续补充。&lt;/p&gt;</content></entry><entry><title>（四）VoltDB 数据导入导出</title><link href="https://hansonnnn.github.io/articles/voltdb-data-usages.html" rel="alternate"></link><published>2017-01-30T18:00:00+08:00</published><updated>2017-01-30T18:00:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-01-30:/articles/voltdb-data-usages.html</id><summary type="html">&lt;h3&gt;一、Import 数据&lt;/h3&gt;
+&lt;p&gt;针对导入数据到 &lt;code&gt;VoltDB&lt;/code&gt; 当中，&lt;code&gt;VoltDB&lt;/code&gt; 为不同的使用场景提供了不同的解决方案，有可能只需要在第一次初始化数据到数据库中时导入，但也有可能数据实时更新同时就需要数据实时导入到 &lt;code&gt;VoltDB&lt;/code&gt; 当中。&lt;/p&gt;
+&lt;h4&gt;1.1 使用工具一次性导入&lt;/h4&gt;
+&lt;p&gt;在一次性导入的场景当中，比如一次性将数据初始化到 &lt;code&gt;VoltDB&lt;/code&gt; 当中，&lt;code&gt;VoltDB&lt;/code&gt; 提供了批量导入工具 &lt;code&gt;csvloader&lt;/code&gt; 以及 &lt;code&gt;jdbcloader&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;使用 &lt;code&gt;csvloader&lt;/code&gt; 工具导入数据到数据库即从 &lt;code&gt;csv&lt;/code&gt; 文件导入数据到 &lt;code&gt;VoltDB&lt;/code&gt; 。在启动 &lt;code&gt;VoltDB&lt;/code&gt; 后，打开另外的 shell 窗口进入相同的目录，使用以下命令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$csvloader&lt;/span&gt; city --file&lt;span class="o"&gt;=&lt;/span&gt;data.csv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;解释一下上面的命令，&lt;code&gt;city&lt;/code&gt; 是已经在 &lt;code&gt;VoltDB&lt;/code&gt; 中创建的表结构，&lt;code&gt;data.csv&lt;/code&gt; 是数据批量存在的文件 …&lt;/p&gt;</summary><content type="html">&lt;h3&gt;一、Import 数据&lt;/h3&gt;
+&lt;p&gt;针对导入数据到 &lt;code&gt;VoltDB&lt;/code&gt; 当中，&lt;code&gt;VoltDB&lt;/code&gt; 为不同的使用场景提供了不同的解决方案，有可能只需要在第一次初始化数据到数据库中时导入，但也有可能数据实时更新同时就需要数据实时导入到 &lt;code&gt;VoltDB&lt;/code&gt; 当中。&lt;/p&gt;
+&lt;h4&gt;1.1 使用工具一次性导入&lt;/h4&gt;
+&lt;p&gt;在一次性导入的场景当中，比如一次性将数据初始化到 &lt;code&gt;VoltDB&lt;/code&gt; 当中，&lt;code&gt;VoltDB&lt;/code&gt; 提供了批量导入工具 &lt;code&gt;csvloader&lt;/code&gt; 以及 &lt;code&gt;jdbcloader&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;使用 &lt;code&gt;csvloader&lt;/code&gt; 工具导入数据到数据库即从 &lt;code&gt;csv&lt;/code&gt; 文件导入数据到 &lt;code&gt;VoltDB&lt;/code&gt; 。在启动 &lt;code&gt;VoltDB&lt;/code&gt; 后，打开另外的 shell 窗口进入相同的目录，使用以下命令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$csvloader&lt;/span&gt; city --file&lt;span class="o"&gt;=&lt;/span&gt;data.csv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;解释一下上面的命令，&lt;code&gt;city&lt;/code&gt; 是已经在 &lt;code&gt;VoltDB&lt;/code&gt; 中创建的表结构，&lt;code&gt;data.csv&lt;/code&gt; 是数据批量存在的文件，需要使用 &lt;code&gt;--file&lt;/code&gt; 来指定文件。命令格式即如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$csvloader&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;table-name&lt;span class="o"&gt;]&lt;/span&gt; --file&lt;span class="o"&gt;=[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;其他命令选项可以在官网查询。&lt;/p&gt;
+&lt;p&gt;使用 jdbcloader 导入数据：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ jdbcloader employees &lt;span class="se"&gt;\&lt;/span&gt;
+     --jdbcurl&lt;span class="o"&gt;=&lt;/span&gt;jdbc:postgresql://remotesvr/corphr &lt;span class="se"&gt;\ &lt;/span&gt;
+     --jdbctable&lt;span class="o"&gt;=&lt;/span&gt;employees &lt;span class="se"&gt;\ &lt;/span&gt;
+     --jdbcdriver&lt;span class="o"&gt;=&lt;/span&gt;org.postgresql.Driver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上述命令即使用 &lt;code&gt;jdbc&lt;/code&gt; 工具批量导入数据到 &lt;code&gt;VoltDB&lt;/code&gt;。&lt;/p&gt;
+&lt;h4&gt;1.2 实时导入数据&lt;/h4&gt;
+&lt;p&gt;要导入的数据是不断更新的业务数据，也就是导入的数据源数据实时更新，需要在配置文件中配置&lt;code&gt;import&lt;/code&gt;相关配置。在导入时需要使用&lt;code&gt;VoltDB&lt;/code&gt;中已有的存储过程，但是不同的一点是，它是可以自动的控制数据导入。比如使用&lt;code&gt;kafkaloader&lt;/code&gt;将数据从&lt;code&gt;kafka&lt;/code&gt;中导入数据。
+在使用&lt;code&gt;kafkaloader&lt;/code&gt;时（&lt;code&gt;type="kafka"&lt;/code&gt;），需要选择数据导入之前的初始化类型（&lt;code&gt;format&lt;/code&gt;），有&lt;code&gt;CSV&lt;/code&gt;和&lt;code&gt;TSV&lt;/code&gt;两种类型可供选择，并且需要在填写有关&lt;code&gt;Import&lt;/code&gt;的配置项的时候需要指明，然后在创建表时会根据&lt;code&gt;kafka&lt;/code&gt;中存储的JSON字符串的&lt;code&gt;K-V&lt;/code&gt;对数(就是一段&lt;code&gt;JSON&lt;/code&gt;串中存在的键值对的对数)来决定。另外导入时需要指明&lt;code&gt;kafka&lt;/code&gt;的&lt;code&gt;groupid&lt;/code&gt;,否则可能会出现导入失败。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;import&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;configuration&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;kafka&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;format=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;csv&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;enabled=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;brokers&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;192.168.0.135:9092&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;topics&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;indigo_idg&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;procedure&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;EDI.insert&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;groupid&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;1&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/import&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;也可以配置多个&lt;code&gt;kafka&lt;/code&gt;数据源将数据导入&lt;code&gt;VoltDB&lt;/code&gt;当中。如下示例:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;import&amp;gt;&lt;/span&gt; 
+&lt;span class="nt"&gt;&amp;lt;configuration&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;kafka&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;enabled=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt; 
+  &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;brokers&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;kafkasvr:9092&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt; 
+  &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;topics&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;employees&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt; 
+  &lt;span class="nt"&gt;&amp;lt;propertyname&lt;/span&gt;&lt;span class="err"&gt;=&amp;quot;procedure&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;EMPLOYEE.insert&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt; 
+&lt;span class="nt"&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt; 
+&lt;span class="nt"&gt;&amp;lt;configuration&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;kafka&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;enabled=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt; 
+  &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;brokers&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;kafkasvr:9092&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt; 
+  &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;topics&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;managers&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt; 
+  &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;procedure&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;MANAGER.insert&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt; 
+&lt;span class="nt"&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt; 
+&lt;span class="nt"&gt;&amp;lt;/import&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上从kafka导入数据只是数据源的一种，其他数据源可以查看官方文档。&lt;/p&gt;
+&lt;h3&gt;二、Export 数据&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Export&lt;/code&gt; 功能现在也暂时只支持企业版。如何做到将voltDB中的数据导出到其他目的地，比如 &lt;code&gt;file&lt;/code&gt;,&lt;code&gt;kafka&lt;/code&gt;,&lt;code&gt;elasticsearch&lt;/code&gt; 等等存储目的地，首先在导出时需要创建 &lt;code&gt;STREAM&lt;/code&gt;，&lt;code&gt;STREAM&lt;/code&gt; 的作用就是可以将数据不断地以副本的形式导出的各种存储源，它的创建过程以及形式与表一样，但是可以将它看作一种虚拟的表，但是它不支持除Insert以外的其他操作的，指出的是在Export之前必须创建 &lt;code&gt;STREAM&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;创建 &lt;code&gt;STREAM&lt;/code&gt; 写法：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE STREAM stream-name 
+[PARTITION ON COLUMN column-name]
+[EXPORT TO TARGET export-target-name] ( 
+column-definition [,...]
+);
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nl"&gt;definition&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;datatype&lt;/span&gt;
+
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;DEFAULT&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="n"&gt;NOT&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;p&gt;创建名为 &lt;code&gt;export_customer&lt;/code&gt; 的&lt;code&gt;STREAM&lt;/code&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CREATE STREAM export_customer EXPORT TO 
+TARGET archive ( . . . );
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后需要在配置文件(&lt;code&gt;deployment.xml&lt;/code&gt;)文件中配置有关 &lt;code&gt;Export&lt;/code&gt; 的属性，比如以下示例是将数据导出格式为 &lt;code&gt;CSV&lt;/code&gt; 的 &lt;code&gt;file&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="nt"&gt;&amp;lt;export&amp;gt;&lt;/span&gt;
+     &lt;span class="nt"&gt;&amp;lt;configuration&lt;/span&gt; &lt;span class="na"&gt;enabled=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;target=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;votes&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;file&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;csv&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;property&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;nonce&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;MyExport&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/export&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;经过上述步骤以后，导出 &lt;code&gt;VoltDB&lt;/code&gt; 中的数据需要在 &lt;code&gt;VoltDB&lt;/code&gt; 初始化时，或者在使用命令 &lt;code&gt;voltdbadmin update&lt;/code&gt; 的时候。&lt;/p&gt;
+&lt;p&gt;关于 &lt;code&gt;VoltDB&lt;/code&gt; 数据的导入导出先介绍为止。以上内容均来自个人实践总结以及参考官方文档。&lt;/p&gt;
+&lt;h3&gt;三、参考文档&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;https://docs.voltdb.com/UsingVoltDB/exportimport.php&lt;/li&gt;
+&lt;/ol&gt;</content></entry><entry><title>（三）VoltDB 的实际使用</title><link href="https://hansonnnn.github.io/articles/voltdb-usages.html" rel="alternate"></link><published>2017-01-20T19:00:00+08:00</published><updated>2017-01-20T19:00:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-01-20:/articles/voltdb-usages.html</id><summary type="html">&lt;h3&gt;一、初始化&lt;/h3&gt;
+&lt;p&gt;在完成安装后就可以尝试启动 &lt;code&gt;VoltDB&lt;/code&gt;。在启动之前需要先选择一个目录来初始化voltDB根目录，比如单独建立一个 &lt;code&gt;VoltDB&lt;/code&gt; 项目的目录。初始化只需一次，但是如果有修改配置或者有重新初始化的必要也可以强制重新初始化。初始化完成后在该目录下便可启动 &lt;code&gt;VoltDB&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; init
+&lt;span class="nv"&gt;$voltdb&lt;/span&gt; start
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外初始化时可以指定初始化目录及VoltDB配置文件，使用 &lt;code&gt;--D&lt;/code&gt; 参数及 &lt;code&gt;--config&lt;/code&gt; 参数。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; init --D&lt;span class="o"&gt;=&lt;/span&gt; --config&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;二、集群部署&lt;/h3&gt;
+&lt;p&gt;集群下部署安装 VoltDB 与单节点部署安装流程一致，只需安装 VoltDB 到不同的节点。与单节点相同，集群下启动 VoltDB 之前需要为每台节点初始化 VoltDB 根目录。另外，同一个集群下的所有节点的配置文件要保持完全一致，所以在初始化根目录时，需要指定相同的配置文件。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; init -D ~/voltdb --config&lt;span class="o"&gt;=&lt;/span&gt;depolyment …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h3&gt;一、初始化&lt;/h3&gt;
+&lt;p&gt;在完成安装后就可以尝试启动 &lt;code&gt;VoltDB&lt;/code&gt;。在启动之前需要先选择一个目录来初始化voltDB根目录，比如单独建立一个 &lt;code&gt;VoltDB&lt;/code&gt; 项目的目录。初始化只需一次，但是如果有修改配置或者有重新初始化的必要也可以强制重新初始化。初始化完成后在该目录下便可启动 &lt;code&gt;VoltDB&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; init
+&lt;span class="nv"&gt;$voltdb&lt;/span&gt; start
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外初始化时可以指定初始化目录及VoltDB配置文件，使用 &lt;code&gt;--D&lt;/code&gt; 参数及 &lt;code&gt;--config&lt;/code&gt; 参数。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; init --D&lt;span class="o"&gt;=&lt;/span&gt; --config&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;二、集群部署&lt;/h3&gt;
+&lt;p&gt;集群下部署安装 VoltDB 与单节点部署安装流程一致，只需安装 VoltDB 到不同的节点。与单节点相同，集群下启动 VoltDB 之前需要为每台节点初始化 VoltDB 根目录。另外，同一个集群下的所有节点的配置文件要保持完全一致，所以在初始化根目录时，需要指定相同的配置文件。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; init -D ~/voltdb --config&lt;span class="o"&gt;=&lt;/span&gt;depolyment.xml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;其中：
+- &lt;code&gt;-D&lt;/code&gt;： 代表&lt;code&gt;VoltDB&lt;/code&gt;初始化的根目录（可以指定，也可以不加此参数，默认代表在当前目录下初始化
+- &lt;code&gt;--config&lt;/code&gt;：指定了目录下的VoltDB的配置文件，在集群启动的时候需要指定这个参数。&lt;/p&gt;
+&lt;p&gt;初始化后启动集群中的&lt;code&gt;VoltDB&lt;/code&gt;数据库需要确认以下信息：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;--count&lt;/code&gt; 来指定组成集群的节点数&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;--host&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;或者 &lt;code&gt;-H&lt;/code&gt; 选项来指定集群中的节点，如以下示例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; start --count&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt; --host&lt;span class="o"&gt;=&lt;/span&gt;voltnode1,voltnode2,voltnode3,voltnode4,voltnode5
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;指定集群节点，这时候 &lt;code&gt;host&lt;/code&gt; 参数已经指定了具体的节点，所以集群节点数也就默认设置为5，也不需要再去指定 count 参数。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; start --host&lt;span class="o"&gt;=&lt;/span&gt;node2,node3,node4
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;三、集群动态增加节点以及恢复节点&lt;/h3&gt;
+&lt;p&gt;这种高可用方案必须基于企业版。如果出现集群节点不足以应对现有数据量，导致整个集群的计算能力不够高，可以动态增加节点来达到横向扩展，并且这过程中集群不需停机可以保证正常的工作量。而对于恢复节点，当出现适量范围内的节点宕机，集群可以保持正常工作，并且已宕机的节点在经过修复后仍然可以恢复到集群中工作，这种高可用方案很大的提高了集群容量的弹性和集群的安全性。决定集群高可用的参数与 &lt;code&gt;VoltDB&lt;/code&gt; 的配置参数 &lt;code&gt;k-safty&lt;/code&gt; 有关，详细设置细节同样将会在以下章节中讲述。&lt;/p&gt;
+&lt;p&gt;示例:向集群中动态增加节点，在新节点已经初始化后的根目录下执行以下命令&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; start --add --host&lt;span class="o"&gt;=&lt;/span&gt;server1,server2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;注意：使用 &lt;code&gt;--add&lt;/code&gt; 选项时其后面的 &lt;code&gt;--host&lt;/code&gt; 选项的服务器个数必须大于 &lt;code&gt;k-safty&lt;/code&gt; 设置值。&lt;/p&gt;
+&lt;p&gt;还有另外一种集群动态增加节点的方式，也是用于节点恢复。如下图，3个节点的集群，如果出现N1节点的宕机，那么他恢复集群的方式可以让它在重新启动时指向N2的地址，就可以做到节点的添加以及恢复。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$voltdb&lt;/span&gt; start --host&lt;span class="o"&gt;=&lt;/span&gt;N2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="image" src="../images/voltdb/voltdb9.png"&gt;&lt;/p&gt;
+&lt;h3&gt;四、最大堆（Java HEAP）设置&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 的底层一部分使用 &lt;code&gt;java&lt;/code&gt; ，另外一部分使用的 &lt;code&gt;C&lt;/code&gt; 以及 &lt;code&gt;C++&lt;/code&gt; ，从而 &lt;code&gt;VoltDB&lt;/code&gt; 需要保证足够堆的大小来完成其部分功能。默认情况下 &lt;code&gt;VoltDB&lt;/code&gt; 的最大堆设置大小为 2GB，但是在实际中如果使用了大量的存储过程以及 View 这些需要耗去大量堆空间的操作，默认值终究是不够使用的，所以在启动前可以分配给堆合适的空间来保证其正常工作。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;VOLTDB_HEAPMAX&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;3072&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上述命令是将最大堆大小更改为3GB。&lt;/p&gt;
+&lt;h3&gt;五、配置（deployment.xml）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 的配置文件非常关键，关系到整个集群的效率以及最佳使用。所以需要对配置文件做详细的解析。关于配置文件主要会通过两项参数 &lt;code&gt;k-safty&lt;/code&gt; 以及 &lt;code&gt;sitesperhost&lt;/code&gt; 来讲述。&lt;/p&gt;
+&lt;h4&gt;5.1 k-safty 介绍以及设置&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 的高可用集群方案是通过 &lt;code&gt;k-safty&lt;/code&gt; 来完成。当然，这种方案同样只支持于企业版。在 &lt;code&gt;VoltDB&lt;/code&gt; 当中，没有主从节点之分，它是一种 &lt;code&gt;shard-nothing&lt;/code&gt; 结构，也就是说集群中所有的节点都是同一个级别。分区时都是平均分配数据，并且所有的节点读写速度全部一致，其实这也是 &lt;code&gt;VoltDB&lt;/code&gt; 处理速度快的一方面原因。&lt;code&gt;k-safty&lt;/code&gt; 的设置可以保证在集群启动之后在集群下的每个节点都会保存一个数据副本以保证任何节点宕机后的容灾，而不至于使集群数据丢失或者集群丧失计算能力。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot;?&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;deployment&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;cluster&lt;/span&gt; &lt;span class="err"&gt;.&lt;/span&gt; &lt;span class="err"&gt;.&lt;/span&gt; &lt;span class="err"&gt;.&lt;/span&gt;
+            &lt;span class="na"&gt;k-factor=&lt;/span&gt;&lt;span class="s"&gt;”1”&lt;/span&gt;   &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/deployment&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;5.2 sitesperhost 介绍以及设置&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;sitesperhost&lt;/code&gt; 参数合理设置是关系到整个集群的计算能力，也关系到整个集群当中 &lt;code&gt;partition&lt;/code&gt; 的个数，&lt;code&gt;sitesperhost&lt;/code&gt; 的值乘以集群节点数就是集群的分区数。在 &lt;code&gt;VoltDB&lt;/code&gt; 当中 &lt;code&gt;sitesperhost&lt;/code&gt; 的值设定最多不可以超过24，最佳实践通常在4到16。但是其值的设定需要不断的集群测试来设定，通常其值的设置是通过3/4倍的逻辑cpu个数来设定；现有4c,2c*2三个节点组成的集群，那么这个集群的 &lt;code&gt;sitesperhost&lt;/code&gt; 的值范围会在3~4之间设置，但是设置3为最佳，那么此时集群的总的分区数为9。另外 &lt;code&gt;VoltDB&lt;/code&gt; 的每个分区都是由集群当中的每个cpu绑定管理，在查询时， &lt;code&gt;VoltDB&lt;/code&gt; 根据分区来执行查询(分区键设计以及分区HASH决定)，从而 &lt;code&gt;VoltDB&lt;/code&gt; 对于单机以及集群cpu要求较高。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot;?&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;deployment&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;cluster&lt;/span&gt; &lt;span class="err"&gt;.&lt;/span&gt; &lt;span class="err"&gt;.&lt;/span&gt; &lt;span class="err"&gt;.&lt;/span&gt;
+            &lt;span class="na"&gt;sitesperhost=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;3&amp;quot;&lt;/span&gt;
+   &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/deployment&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上是关于VoltDB使用上的介绍以及实践经验，不足处也请多多指教。以下会继续更新VoltDB相关的介绍使用文档。&lt;/p&gt;
+&lt;h3&gt;六、参考文档&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;https://docs.voltdb.com/UsingVoltDB/ConfigStructure.php&lt;/li&gt;
+&lt;/ol&gt;</content></entry><entry><title>（二）部署 VoltDB</title><link href="https://hansonnnn.github.io/articles/install-voltdb.html" rel="alternate"></link><published>2017-01-12T12:20:00+08:00</published><updated>2017-01-12T12:20:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-01-12:/articles/install-voltdb.html</id><summary type="html">&lt;h3&gt;一、安装&lt;/h3&gt;
+&lt;p&gt;以下安装步骤均基于社区版 6.9 Version，安装操作系统 Ubuntu 16.04 ，企业版的安装不做详细介绍。&lt;/p&gt;
+&lt;p&gt;下载请移步：
+https://github.com/VoltDB/voltdb/releases/tag/voltdb-6.9&lt;/p&gt;
+&lt;h4&gt;1.1 安装依赖包&lt;/h4&gt;
+&lt;p&gt;安装 Java 1.8&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;vim /etc/profile&lt;/code&gt;, 增加以下内容:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# vim &lt;/span&gt;
+&lt;span class="nv"&gt;JAVA_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/home/smith/elk/cloudscope/jdk1.8.0_111
+&lt;span class="nv"&gt;CLASSPATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$JAVA_HOME&lt;/span&gt;/lib/
+&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$PATH&lt;/span&gt;:&lt;span class="nv"&gt;$JAVA_HOME&lt;/span&gt;/bin
+&lt;span class="nb"&gt;export&lt;/span&gt; PATH …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h3&gt;一、安装&lt;/h3&gt;
+&lt;p&gt;以下安装步骤均基于社区版 6.9 Version，安装操作系统 Ubuntu 16.04 ，企业版的安装不做详细介绍。&lt;/p&gt;
+&lt;p&gt;下载请移步：
+https://github.com/VoltDB/voltdb/releases/tag/voltdb-6.9&lt;/p&gt;
+&lt;h4&gt;1.1 安装依赖包&lt;/h4&gt;
+&lt;p&gt;安装 Java 1.8&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;vim /etc/profile&lt;/code&gt;, 增加以下内容:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# vim &lt;/span&gt;
+&lt;span class="nv"&gt;JAVA_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/home/smith/elk/cloudscope/jdk1.8.0_111
+&lt;span class="nv"&gt;CLASSPATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$JAVA_HOME&lt;/span&gt;/lib/
+&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$PATH&lt;/span&gt;:&lt;span class="nv"&gt;$JAVA_HOME&lt;/span&gt;/bin
+&lt;span class="nb"&gt;export&lt;/span&gt; PATH JAVA_HOME CLASSPATH
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;使配置文件生效:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$source&lt;/span&gt; /etc/profile
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get -y install ant build-essential ant-optional default-jdk python cmake valgrind ntp ccache git-arch git-completion git-core git-svn git-doc git-email python-httplib2 python-setuptools python-dev apt-show-versions
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Centos/Fedora&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo yum -y install ant ant-nodeps ant-junit ant-scripts ant-javadoc ant-trax \ gcc gcc-c++ python valgrind ntp python26 git-all python-httplib2 \python-setuptools python-devel ccache cmake bzip2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;1.2 编译安装voltDB&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;解压下载好的 &lt;code&gt;VoltDB&lt;/code&gt; 的tar包&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;编辑系统属性文件&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;vim /etc/profile&lt;/code&gt;, 添加以下内容：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;export VOLTDB_HOME=/home/smith/voltDB/voltdb-voltdb-6.9
+export PATH=&lt;span class="nv"&gt;$PATH&lt;/span&gt;:&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;VOLTDB_HOME&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/bin
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;保存退出并生效:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$source /etc/profile
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;进入解压好的 &lt;code&gt;VoltDB&lt;/code&gt; 根目录，按先后顺序执行以下命令:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$ant&lt;/span&gt; clean
+&lt;span class="nv"&gt;$ant&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;出现 build successful 即安装成功.&lt;/p&gt;</content></entry><entry><title>（一）VoltDB 简介</title><link href="https://hansonnnn.github.io/articles/voltdb-introduction.html" rel="alternate"></link><published>2017-01-11T12:00:00+08:00</published><updated>2017-01-11T12:00:00+08:00</updated><author><name>Zhao Han</name></author><id>tag:hansonnnn.github.io,2017-01-11:/articles/voltdb-introduction.html</id><summary type="html">&lt;h3&gt;一、VoltDB 简介&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;VoltDB&lt;/code&gt; 是一种内存数据库，作为常见的内存数据库( K-V 存储)，但也可以只将这种k-v形式存储的内存数据库称为内存缓存（cache），其不是通常sql操作数据库因此也称类似的数据存储为 &lt;code&gt;NoSQL&lt;/code&gt;，但作为新型的内存数据库NewSQL，不同于 &lt;code&gt;NoSQL&lt;/code&gt; 数据库，它还是立足于常用的关系型数据库数据存储方式，并且支持 sql，支持事务。&lt;/p&gt;
 &lt;p&gt;作为新兴的一种内存数据库技术，&lt;code&gt;VoltDB&lt;/code&gt; 可以说是完美，尤其是对于数据量大，单笔数据小的使用场景，&lt;code&gt;voltDB&lt;/code&gt; 占尽了优势，采用内存存储，是为了提高传统关系型数据库速度的瓶颈，&lt;code&gt;shard-nothing&lt;/code&gt; 结构让它可以做到集群部署的高可用，弹性存储。最关键的是其很好的继承了传统数据库的sql以及事务特性，这对于其使用者可以很好的从传统关系型数据库切换到voltDB来。下面将具体介绍 &lt;code&gt;VoltDB&lt;/code&gt; 的特性以及使用。&lt;/p&gt;
 &lt;h4&gt;1.1 事务&lt;/h4&gt;

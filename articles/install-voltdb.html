@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet/less" type="text/css" href="https://hansonnnn.github.io/theme/stylesheet/style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/solid.css">
+
+    <link href="https://hansonnnn.github.io/static/custom.css" rel="stylesheet">
+
+
+
+    <link rel="shortcut icon" href="/images/fav.ico" type="image/x-icon">
+    <link rel="icon" href="/images/fav.ico" type="image/x-icon">
+
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#333333">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#333333">
+
+<meta name="author" content="Zhao Han" />
+<meta name="description" content="一、安装 以下安装步骤均基于社区版 6.9 Version，安装操作系统 Ubuntu 16.04 ，企业版的安装不做详细介绍。 下载请移步： https://github.com/VoltDB/voltdb/releases/tag/voltdb-6.9 1.1 安装依赖包 安装 Java 1.8 vim /etc/profile, 增加以下内容: # vim JAVA_HOME=/home/smith/elk/cloudscope/jdk1.8.0_111 CLASSPATH=$JAVA_HOME/lib/ PATH=$PATH:$JAVA_HOME/bin export PATH …" />
+<meta name="keywords" content="">
+
+<meta property="og:site_name" content="Hansonnnn"/>
+<meta property="og:title" content="（二）部署 VoltDB"/>
+<meta property="og:description" content="一、安装 以下安装步骤均基于社区版 6.9 Version，安装操作系统 Ubuntu 16.04 ，企业版的安装不做详细介绍。 下载请移步： https://github.com/VoltDB/voltdb/releases/tag/voltdb-6.9 1.1 安装依赖包 安装 Java 1.8 vim /etc/profile, 增加以下内容: # vim JAVA_HOME=/home/smith/elk/cloudscope/jdk1.8.0_111 CLASSPATH=$JAVA_HOME/lib/ PATH=$PATH:$JAVA_HOME/bin export PATH …"/>
+<meta property="og:locale" content="zh_CN"/>
+<meta property="og:url" content="https://hansonnnn.github.io/articles/install-voltdb.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-01-12 12:20:00+08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://hansonnnn.github.io/author/zhao-han.html">
+<meta property="article:section" content="VoltDB"/>
+<meta property="og:image" content="/images/head.jpg">
+
+  <title>Hansonnnn &ndash; （二）部署 VoltDB</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://hansonnnn.github.io">
+        <img src="/images/head.jpg" alt="" title="">
+      </a>
+      <h1><a href="https://hansonnnn.github.io"></a></h1>
+
+<p>test</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://hansonnnn.github.io/pages/about-me.html#about-me">About Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/Hansonnnn" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-mail" href="hanz.yw1024@gmail.com" target="_blank">
+            <i class="fab fa-mail">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="https://hansonnnn.github.io">    Home
+</a>
+
+      <a href="/archives.html">Archives</a>
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="install-voltdb">（二）部署 VoltDB</h1>
+    <p>
+          Posted on 2017-01-12(星期四) 12:20 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h3>一、安装</h3>
+<p>以下安装步骤均基于社区版 6.9 Version，安装操作系统 Ubuntu 16.04 ，企业版的安装不做详细介绍。</p>
+<p>下载请移步：
+https://github.com/VoltDB/voltdb/releases/tag/voltdb-6.9</p>
+<h4>1.1 安装依赖包</h4>
+<p>安装 Java 1.8</p>
+<p><code>vim /etc/profile</code>, 增加以下内容:</p>
+<div class="highlight"><pre><span></span><span class="c1"># vim </span>
+<span class="nv">JAVA_HOME</span><span class="o">=</span>/home/smith/elk/cloudscope/jdk1.8.0_111
+<span class="nv">CLASSPATH</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/lib/
+<span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$JAVA_HOME</span>/bin
+<span class="nb">export</span> PATH JAVA_HOME CLASSPATH
+</pre></div>
+
+
+<p>使配置文件生效:</p>
+<div class="highlight"><pre><span></span><span class="nv">$source</span> /etc/profile
+</pre></div>
+
+
+<p><strong>Ubuntu</strong></p>
+<div class="highlight"><pre><span></span>sudo apt-get -y install ant build-essential ant-optional default-jdk python cmake valgrind ntp ccache git-arch git-completion git-core git-svn git-doc git-email python-httplib2 python-setuptools python-dev apt-show-versions
+</pre></div>
+
+
+<p><strong>Centos/Fedora</strong></p>
+<div class="highlight"><pre><span></span>sudo yum -y install ant ant-nodeps ant-junit ant-scripts ant-javadoc ant-trax \ gcc gcc-c++ python valgrind ntp python26 git-all python-httplib2 \python-setuptools python-devel ccache cmake bzip2
+</pre></div>
+
+
+<h4>1.2 编译安装voltDB</h4>
+<ol>
+<li>
+<p>解压下载好的 <code>VoltDB</code> 的tar包</p>
+</li>
+<li>
+<p>编辑系统属性文件</p>
+</li>
+</ol>
+<p><code>vim /etc/profile</code>, 添加以下内容：</p>
+<div class="highlight"><pre><span></span>export VOLTDB_HOME=/home/smith/voltDB/voltdb-voltdb-6.9
+export PATH=<span class="nv">$PATH</span>:<span class="cp">${</span><span class="n">VOLTDB_HOME</span><span class="cp">}</span>/bin
+</pre></div>
+
+
+<p>保存退出并生效:</p>
+<div class="highlight"><pre><span></span>$source /etc/profile
+</pre></div>
+
+
+<ol>
+<li>进入解压好的 <code>VoltDB</code> 根目录，按先后顺序执行以下命令:</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="nv">$ant</span> clean
+<span class="nv">$ant</span>
+</pre></div>
+
+
+<p>出现 build successful 即安装成功.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2019</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Hansonnnn ",
+  "url" : "https://hansonnnn.github.io",
+  "image": "/images/head.jpg",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet/less" type="text/css" href="https://hansonnnn.github.io/theme/stylesheet/style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://hansonnnn.github.io/theme/font-awesome/css/solid.css">
+
+    <link href="https://hansonnnn.github.io/static/custom.css" rel="stylesheet">
+
+
+
+    <link rel="shortcut icon" href="/images/fav.ico" type="image/x-icon">
+    <link rel="icon" href="/images/fav.ico" type="image/x-icon">
+
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#333333">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#333333">
+
+<meta name="author" content="Zhao Han" />
+<meta name="description" content="一、存储过程简介 存储过程是 VoltDB 用来定义事务的，可以将一组 sql 封装到使用Java编写的存储过程当中。当然是可以供外部的客户端调用来实现 VoltDB 的 CRUD 操作。建立存储过程的方式可以有两种，直接采用 DDL 定义或使用 Java 语言。下面将会详细介绍。 1.1 简单的存储过程 简单的存储过程编写是纯SQL语句实现（DDL定义），VoltDB 提供了SQL运行环境 sqlcmd，在启动 VoltDB 后在另外的 shell 窗口（进入同样的目录）,输入命令 sqlcmd，在进入环境之后，就可以编写SQL，当然在编写存储过程之前，必须确保 VoltDB 当中已经创建了表空间。如下示例是使用SQL创建存储过程的范例； CREATE PROCEDURE leastpopulated 1 AS SELECT TOP …" />
+<meta name="keywords" content="">
+
+<meta property="og:site_name" content="Hansonnnn"/>
+<meta property="og:title" content="（五）VoltDB 存储过程"/>
+<meta property="og:description" content="一、存储过程简介 存储过程是 VoltDB 用来定义事务的，可以将一组 sql 封装到使用Java编写的存储过程当中。当然是可以供外部的客户端调用来实现 VoltDB 的 CRUD 操作。建立存储过程的方式可以有两种，直接采用 DDL 定义或使用 Java 语言。下面将会详细介绍。 1.1 简单的存储过程 简单的存储过程编写是纯SQL语句实现（DDL定义），VoltDB 提供了SQL运行环境 sqlcmd，在启动 VoltDB 后在另外的 shell 窗口（进入同样的目录）,输入命令 sqlcmd，在进入环境之后，就可以编写SQL，当然在编写存储过程之前，必须确保 VoltDB 当中已经创建了表空间。如下示例是使用SQL创建存储过程的范例； CREATE PROCEDURE leastpopulated 1 AS SELECT TOP …"/>
+<meta property="og:locale" content="zh_CN"/>
+<meta property="og:url" content="https://hansonnnn.github.io/articles/voltdb-store-procedure.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-02-10 10:00:00+08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://hansonnnn.github.io/author/zhao-han.html">
+<meta property="article:section" content="VoltDB"/>
+<meta property="og:image" content="/images/head.jpg">
+
+  <title>Hansonnnn &ndash; （五）VoltDB 存储过程</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://hansonnnn.github.io">
+        <img src="/images/head.jpg" alt="" title="">
+      </a>
+      <h1><a href="https://hansonnnn.github.io"></a></h1>
+
+<p>test</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://hansonnnn.github.io/pages/about-me.html#about-me">About Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/Hansonnnn" target="_blank">
+            <i class="fab fa-github">
+            </i>
+          </a></li>
+          <li>
+            <a  class="sc-mail" href="hanz.yw1024@gmail.com" target="_blank">
+            <i class="fab fa-mail">
+            </i>
+          </a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="https://hansonnnn.github.io">    Home
+</a>
+
+      <a href="/archives.html">Archives</a>
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="voltdb-store-procedure">（五）VoltDB 存储过程</h1>
+    <p>
+          Posted on 2017-02-10(星期五) 10:00 in <a href="https://hansonnnn.github.io/category/voltdb.html">VoltDB</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h3>一、存储过程简介</h3>
+<p>存储过程是 <code>VoltDB</code> 用来定义事务的，可以将一组 <code>sql</code> 封装到使用Java编写的存储过程当中。当然是可以供外部的客户端调用来实现 <code>VoltDB</code> 的 CRUD 操作。建立存储过程的方式可以有两种，直接采用 DDL 定义或使用 Java 语言。下面将会详细介绍。</p>
+<h4>1.1 简单的存储过程</h4>
+<p>简单的存储过程编写是纯SQL语句实现（DDL定义），<code>VoltDB</code> 提供了SQL运行环境 <code>sqlcmd</code>，在启动 <code>VoltDB</code> 后在另外的 shell 窗口（进入同样的目录）,输入命令 <code>sqlcmd</code>，在进入环境之后，就可以编写SQL，当然在编写存储过程之前，必须确保 <code>VoltDB</code> 当中已经创建了表空间。如下示例是使用SQL创建存储过程的范例；</p>
+<div class="highlight"><pre><span></span>CREATE PROCEDURE leastpopulated 1
+
+AS SELECT TOP 1 county, abbreviation,
+
+population FROM people, states WHERE
+
+people.state_num=?  2 
+
+AND people.state_num=states.state_num
+
+ORDER BY population ASC;
+</pre></div>
+
+
+<ol>
+<li>为建立的存储过程起一个名字</li>
+<li>占位符的形式，接收传入的参数</li>
+</ol>
+<p>上述只是正常情况下的编写，考虑到 VoltDB 分区特性，会出现需要查询的字段是作为分区键的，这时候可以在建存储过程时再加上 <code>PARTITION PROCEDURE</code> 。还是上述例子，这次 <code>state_num</code> 作为分区字段，存储过程可以这样写：</p>
+<div class="highlight"><pre><span></span>CREATE PROCEDURE leastpopulated 
+
+PARTITION ON TABLE people COLUMN
+
+state_num AS
+SELECT TOP 1 county, abbreviation,
+
+population FROM people, states WHERE
+
+people.state_num=? AND 
+
+people.state_num=states.state_num ORDER 
+
+BY population ASC;
+</pre></div>
+
+
+<p>建立之后，可以在 <code>sqlcmd</code> 窗口下调用它，另外也可以在外部通过客户端调用来使用。</p>
+<div class="highlight"><pre><span></span><span class="m">1</span>&gt; <span class="nb">exec</span> leastpopulated <span class="m">6</span><span class="p">;</span>
+</pre></div>
+
+
+<p>上述情况是通过SQL的DDL来建立简单的存储过程，但是比如当需要编写一组SQL定义一个事务，就需要复杂的存储过程来定义，即使用Java封装存储过程。</p>
+<h4>1.2 复杂的存储过程</h4>
+<p><code>VoltDB</code> 提供使用 java 来封装基于 <code>sql99</code> 标准的存储过程，这类存储过程更过于复杂，配合多次查询以及需要查询后的结果用来计算，<code>VoltDB</code> 提供了这类存储过程标准的书写方式:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.voltdb.*</span><span class="o">;</span> 
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Procedure</span><span class="o">-</span><span class="n">name</span> <span class="kd">extends</span> <span class="n">VoltProcedure</span> <span class="o">{</span> 
+<span class="c1">// Declare SQL statements ... </span>
+<span class="kd">public</span> <span class="n">datatype</span> <span class="nf">run</span> <span class="o">(</span> <span class="n">arguments</span> <span class="o">)</span> <span class="kd">throws</span> <span class="n">VoltAbortException</span> <span class="o">{</span> 
+<span class="c1">// Body of the Stored Procedure ... </span>
+<span class="o">}</span> 
+<span class="o">}</span>
+</pre></div>
+
+
+<p>首先必须引用 <code>VoltDB</code> 所有的 API 包，在编写类时必须继承 <code>VoltProcedure</code> 接口。然后就是 SQL 的声明，在使用到参数的地方必须用占位符代替。下面将演示一段最简单的存储过程。</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.voltdb.*</span><span class="o">;</span>
+
+<span class="nd">@ProcInfo</span><span class="o">(</span><span class="n">partitionInfo</span> <span class="o">=</span> <span class="s">&quot;HELLOWORLD.DIALECT: 2&quot;</span><span class="o">,</span> <span class="n">singlePartition</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Insert</span> <span class="kd">extends</span> <span class="n">VoltProcedure</span> <span class="o">{</span>
+
+
+<span class="kd">public</span> <span class="kd">final</span> <span class="n">SQLStmt</span> <span class="n">sql</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLStmt</span><span class="o">(</span>
+   <span class="s">&quot;INSERT INTO HELLOWORLD VALUES (?, ?, ?);&quot;</span><span class="o">);</span>
+
+
+<span class="kd">public</span> <span class="n">VoltTable</span><span class="o">[]</span> <span class="nf">run</span><span class="o">(</span><span class="n">String</span> <span class="n">hello</span><span class="o">,</span> <span class="n">String</span> <span class="n">world</span><span class="o">,</span> <span class="n">String</span> <span class="n">language</span><span class="o">)</span>
+   <span class="kd">throws</span> <span class="n">VoltAbortException</span> <span class="o">{</span>
+  <span class="n">voltQueueSQL</span><span class="o">(</span><span class="n">sql</span><span class="o">,</span> <span class="n">hello</span><span class="o">,</span> <span class="n">world</span><span class="o">,</span> <span class="n">language</span><span class="o">);</span>
+  <span class="n">voltExecuteSQL</span><span class="o">();</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>接下来需要编译 java 文件，然后打包成 jar 包，最后再发布到 <code>VoltDB</code> 中。</p>
+<h4>1.3 过程实现</h4>
+<ol>
+<li>编译，编译时需要指定到voltdb目录下，如下:</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="nv">$javac</span> -cp <span class="s2">&quot;</span><span class="nv">$CLASSPATH</span><span class="s2">:/home/smith/voltDB/voltdb-voltdb-6.9/voltdb/*&quot;</span>  insert.java
+</pre></div>
+
+
+<ol>
+<li>打包</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="nv">$jar</span> cvf Select.jar insert.class
+</pre></div>
+
+
+<ol>
+<li>发布到数据库</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="m">21</span>&gt; load classes insert.jar<span class="p">;</span>
+</pre></div>
+
+
+<p>在部署到数据库之后需要声明定义这个存储过程，如上 <code>insert.jar</code> 已经发布到 <code>VoltDB</code> 当中，然后在 sqlcmd 下执行如下 sql 完成存储过程在数据库中的声明：</p>
+<div class="highlight"><pre><span></span>22&gt;CREATE PROCEDURE FROM CLASS insert;
+</pre></div>
+
+
+<p>然后查看已经在 VoltDB 中声明好的存储过程</p>
+<div class="highlight"><pre><span></span>23&gt;Show procedure；
+</pre></div>
+
+
+<h3>二、查看执行计划</h3>
+<p>对于已创建的或者要执行的存储过程，可以查看执行计划，执行计划解释了存储过程。<code>VoltDB</code> 提供了两个方法来查看执行计划，可以在sqlcmd中查看执行计划，比如：</p>
+<div class="highlight"><pre><span></span>1&gt;explain select count(*) from votes;
+2&gt;explainproc Initialize;
+</pre></div>
+
+
+<ul>
+<li><code>Initialize</code>为声明的一个存储过程</li>
+</ul>
+<p>在阅读执行计划的时候需要从下纸上的顺序阅读。可以看到上述存储过程 Initialize 当中包含了三段 SQL 语句，从下到上的执行顺序。</p>
+<h3>三、Client 调用存储过程</h3>
+<p>经过编写，编译以及部署后的存储过程在执行时，可以通过外部的 <code>Client</code> 客户端调用其，<code>VoltDB</code> 提供了三种方式为调用提供便利，一个 <code>Client</code> 调用 <code>VoltDB</code> 存储过程的流程应该为：</p>
+<ol>
+<li>建立连接</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="n">org</span><span class="o">.</span><span class="na">voltdb</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">Client</span> <span class="n">myApp</span><span class="o">;</span>
+<span class="n">myApp</span> <span class="o">=</span> <span class="n">ClientFactory</span><span class="o">.</span><span class="na">createClient</span><span class="o">();</span>
+<span class="n">myApp</span><span class="o">.</span><span class="na">createConnection</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span><span class="mi">21212</span><span class="o">);</span>
+</pre></div>
+
+
+<ol>
+<li>调用存储过程</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="n">myApp</span><span class="o">.</span><span class="na">callProcedure</span><span class="o">(</span><span class="s">&quot;HELLOWORLD.insert&quot;</span><span class="o">,</span> <span class="s">&quot;Hello&quot;</span><span class="o">,</span> <span class="s">&quot;World&quot;</span><span class="o">,</span> <span class="s">&quot;English&quot;</span><span class="o">);</span>
+<span class="n">myApp</span><span class="o">.</span><span class="na">callProcedure</span><span class="o">(</span><span class="s">&quot;HELLOWORLD.insert&quot;</span><span class="o">,</span> <span class="s">&quot;Bonjour&quot;</span><span class="o">,</span> <span class="s">&quot;Monde&quot;</span><span class="o">,</span> <span class="s">&quot;French&quot;</span><span class="o">);</span>
+<span class="n">myApp</span><span class="o">.</span><span class="na">callProcedure</span><span class="o">(</span><span class="s">&quot;HELLOWORLD.insert&quot;</span><span class="o">,</span> <span class="s">&quot;Hola&quot;</span><span class="o">,</span> <span class="s">&quot;Mundo&quot;</span><span class="o">,</span> <span class="s">&quot;Spanish&quot;</span><span class="o">);</span>
+</pre></div>
+
+
+<p>接受反馈消息：</p>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatus</span><span class="o">()</span> <span class="o">!=</span> <span class="n">ClientResponse</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusString</span><span class="o">());</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="kd">final</span> <span class="n">VoltTable</span> <span class="n">results</span><span class="o">[]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getResults</span><span class="o">();</span>
+<span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">results</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getRowCount</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;I can&#39;t say Hello in that language.\n&quot;</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ol>
+<li>关闭连接</li>
+</ol>
+<div class="highlight"><pre><span></span>  <span class="k">try</span> <span class="o">{</span>
+    <span class="n">myApp</span><span class="o">.</span><span class="na">drain</span><span class="o">();</span>
+    <span class="n">myApp</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+   <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+ <span class="o">}</span>
+ <span class="err">```</span>
+
+<span class="n">注意</span><span class="err">：</span><span class="n">在建立连接的时候</span><span class="err">，</span><span class="n">可以只做集群的单节点连接</span><span class="err">，</span><span class="n">如上述程序所示</span><span class="err">，</span><span class="n">但也可以做多节点的连接</span><span class="err">，`</span><span class="n">VoltDB</span><span class="err">`</span> <span class="n">在</span> <span class="err">`</span><span class="n">Client</span><span class="err">`</span> <span class="n">属性当中提供了一种简便但又非常实用的属性</span><span class="o">(</span><span class="err">`</span><span class="n">topology</span><span class="o">-</span><span class="n">aware</span> <span class="n">client</span><span class="err">`</span><span class="o">)</span><span class="n">可以在创建连接的时候设置</span><span class="err">，</span><span class="n">只需做到连接单个节点</span><span class="err">，</span><span class="n">同时使用这个属性对于应对节点的状态以及集群节点个数的增加非常轻松</span><span class="err">。</span>
+<span class="err">```</span><span class="n">java</span>
+<span class="n">org</span><span class="o">.</span><span class="na">voltdb</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">Client</span> <span class="n">client</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> 
+<span class="n">ClientConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClientConfig</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">,</span><span class="s">&quot;&quot;</span><span class="o">);</span> 
+<span class="n">config</span><span class="o">.</span><span class="na">setTopologyChangeAware</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="k">try</span> <span class="o">{</span> 
+ <span class="n">client</span> <span class="o">=</span> <span class="n">ClientFactory</span><span class="o">.</span><span class="na">createClient</span><span class="o">(</span><span class="n">config</span><span class="o">);</span> 
+<span class="n">client</span><span class="o">.</span><span class="na">createConnection</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span><span class="mi">21212</span><span class="o">);</span>
+<span class="o">}</span><span class="k">catch</span><span class="err">（</span><span class="n">Exception</span> <span class="n">e</span><span class="err">）</span><span class="o">{</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>上述过程演示了标准的 <code>Client</code> 调用存储过程的流程。下面会介绍使用HTTP 接口以及JDBC接口调用存储过程。</p>
+<h4>3.1  HTTP client程序调用</h4>
+<p>在使用HTTP方式调用Client之前，需要在voltDB的配置文件（<code>deployment.xml</code>）中将有关配置（<httpd>）项填写完成，如下示例，</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;httpd</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span> <span class="na">port=</span><span class="s">&quot;8081&quot;</span> <span class="nt">&gt;</span>
+    <span class="nt">&lt;jsonapi</span> <span class="na">enabled=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/httpd&gt;</span>
+</pre></div>
+
+
+<p>端口号指定为<code>8081</code>，也可以在启动时使用 <code>--http</code>选项指定端口号。也可以使用SSL加密，可以使用 <code>&lt;https&gt;</code> 子元素来指定。
+在打开HTTP接口之后，就可以通过其官方提供的标准访问路径调用存储过程。访问路径：<code>http://&lt;server&gt;:8080/api/1.0/</code>,其之后需要带着要调用的存储过程以及所需的参数，如下表所示：</p>
+<p><img alt="image" src="../images/voltdb/voltdb12.png"></p>
+<p>可以在浏览器网址输入栏中输入以上URL并带上所需参数，无论调用成功与否都会返回一段 JSON 字符串，字符串中包含状态值，异常以及数据库返回的数据结果等。</p>
+<div class="highlight"><pre><span></span>{  appstatus           (integer, boolean)
+   appstatusstring     (string)
+   exception           (integer)
+   results             (array)
+     [                 (object, VoltTable)
+         {  data       (array)
+              [        (any type)
+              ]
+            schema     (array)
+              [  name  (string)
+                 type  (integer, enumerated)
+              ]
+            status     (integer, boolean)
+         }
+     ]
+   status              (integer)
+   statusstring        (string)
+}
+</pre></div>
+
+
+<p>另外 HTTP 调用方式支持 python, perl, C#, PHP 以及使用 JQuery 调用。</p>
+<h4>3.2 JDBC client 程序调用</h4>
+<p><code>VoltDB</code> 与普通关系型数据库一样，同样也是支持 <code>JDBC</code> 接口来调用存储过程。很方便，不需要引入 <code>VoltDB</code> 额外的 API 包，方法一致。
+VoltDB 提供了与连接关系型数据一样的工具，驱动包以及 URL，使用 <code>Class.forName()</code> 方法来加载 JDBC 驱动包，数据库标准路径：<code>jdbc:voltdb://&lt;server&gt;:&lt;port&gt;</code> ,如果需要连接多个节点，则使用 <code>,</code> 隔开，默认端口号为 <code>21212</code> .另外可以在路径上加入额外的参数比如在丢失与 <code>VoltDB</code> 的连接后可以设置 <code>autoconnect</code> 属性实现重新连接。</p>
+<div class="highlight"><pre><span></span><span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&quot;org.voltdb.jdbc.Driver&quot;</span><span class="o">);</span> 
+<span class="n">Connection</span> <span class="n">c</span> <span class="o">=</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span> <span class="s">&quot;jdbc:voltdb://svr1:21212,svr2:21212?autoreconnect=true&quot;</span><span class="o">);</span>
+</pre></div>
+
+
+<p>建立连接之后可以编写 SQL 执行，但在这里重点介绍调用存储过程。如下示例程序所示：</p>
+<div class="highlight"><pre><span></span><span class="n">CallableStatement</span> <span class="n">proc</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">prepareCall</span><span class="o">(</span><span class="s">&quot;{call Select(?)}&quot;</span><span class="o">);</span>
+<span class="n">proc</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;French&quot;</span><span class="o">);</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="na">executeQuery</span><span class="o">();</span>
+<span class="k">while</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="na">next</span><span class="o">())</span> <span class="o">{</span>
+   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;%s, %s!\n&quot;</span><span class="o">,</span> <span class="n">results</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> 
+   <span class="n">results</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3>四、WEB 项目使用 Client</h3>
+<p>如果需要在实际的web项目中使用 <code>Client</code> 客户端来调用存储过程，可以通过使用 <code>maven</code> 管理工具引入所需依赖包就可以在web项目中引入 <code>VoltDB</code> 有关的 API 包及方法。</p>
+<div class="highlight"><pre><span></span> <span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.voltdb<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>voltdbclient<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>5.1<span class="nt">&lt;/version&gt;</span>
+ <span class="nt">&lt;/dependency&gt;</span>  
+</pre></div>
+
+
+<p>关于 <code>VoltDB</code> 存储过程以及存储过程客户端调用介绍就先到此为止，以后有新的理解还会继续补充。</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2019</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Hansonnnn ",
+  "url" : "https://hansonnnn.github.io",
+  "image": "/images/head.jpg",
+  "description": ""
+}
+</script>
+
+</body>
+</html>
